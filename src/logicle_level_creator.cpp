@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : logicle-level-pack-tools.cpp
+// Name        : logicle-level-creator.cpp
 // Author      : 
 // Version     :
 // Copyright   : Your copyright notice
