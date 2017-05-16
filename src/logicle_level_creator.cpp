@@ -41,37 +41,37 @@ using namespace std;
  */
 
 int main(int argc, char* argv[]) {
-	// area of 7 with 6 colours leads to SIGABRT after goto
-	gameboard h(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+    // area of 7 with 6 colours leads to SIGABRT after goto
+    gameboard h(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 
-	h.print_initial();
+    h.print_initial();
 
-	std::cout << "1: up, 2: down, 3: left, 4: right" << std::endl;
+    std::cout << "1: up, 2: down, 3: left, 4: right" << std::endl;
 
-	int choice = 1;
-	while (choice != 0) {
-		std::cin >> choice;
-		switch (choice) {
-		case 1:
-			h.shift(gameboard::shift_direction::up);
-			h.print_current();
-			break;
-		case 2:
-			h.shift(gameboard::shift_direction::down);
-			h.print_current();
-			break;
-		case 3:
-			h.shift(gameboard::shift_direction::left);
-			h.print_current();
-			break;
-		case 4:
-			h.shift(gameboard::shift_direction::right);
-			h.print_current();
-			break;
-		default:
-			break;
-		}
-	}
+    int choice = 1;
+    while (choice != 0) {
+        std::cin >> choice;
+        switch (choice) {
+        case 1:
+            h.shift(gameboard::shift_direction::up);
+            h.print_current();
+            break;
+        case 2:
+            h.shift(gameboard::shift_direction::down);
+            h.print_current();
+            break;
+        case 3:
+            h.shift(gameboard::shift_direction::left);
+            h.print_current();
+            break;
+        case 4:
+            h.shift(gameboard::shift_direction::right);
+            h.print_current();
+            break;
+        default:
+            break;
+        }
+    }
 
-	return 0;
+    return 0;
 }
