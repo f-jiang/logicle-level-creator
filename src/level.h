@@ -19,6 +19,7 @@ public:
 			const std::vector<unsigned>&,
 			gameboard::color_distribution cpop = gameboard::color_distribution::uniform);
 	level(const gameboard&, const std::vector<unsigned>&);
+	// construct from json
 	virtual ~level();
 
 private:

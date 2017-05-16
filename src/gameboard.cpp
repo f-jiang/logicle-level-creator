@@ -9,6 +9,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 #include <cstdlib>
 #include <ctime>
@@ -25,6 +26,24 @@ static int rand_int(int min, int max) {
     return rand() % (max + 1 - min) + min;
 }
 
+void gameboard::print_initial() const {
+	for (int j = 0; j < k_height; j++) {
+		for (int i = 0; i < k_width; i++) {
+			std::cout << m_squares[i][j] << '|' << m_initial_circles[i][j] << ' ';
+		}
+		std::cout << std::endl << std::endl;
+	}
+}
+
+void gameboard::print_current() const {
+	for (int j = 0; j < k_height; j++) {
+		for (int i = 0; i < k_width; i++) {
+			std::cout << m_squares[i][j] << '|' << m_current_circles[i][j] << ' ';
+		}
+		std::cout << std::endl << std::endl;
+	}
+}
+
 gameboard::gameboard(std::size_t height,
 		std::size_t width,
 		std::size_t n_colors,
@@ -33,7 +52,7 @@ gameboard::gameboard(std::size_t height,
 	k_width(width),
 	k_area(height * width),
 	k_n_colors(n_colors > k_area ? k_area : n_colors),
-	m_cur_state(state::blank),
+	m_cur_state(state::initial),
 	m_cdist(cdist)
 {
 	if (k_area % 2 != 0 && k_n_colors == 2) {
@@ -45,7 +64,7 @@ gameboard::gameboard(std::size_t height,
 	}
 
 	m_squares = std::vector<std::vector<unsigned>>(width, std::vector<unsigned>(height));
-	m_circles = m_squares;
+	m_initial_circles = m_squares;
 
 	/*
 	 * determine the number of times each color is to be applied to a board grid
@@ -106,12 +125,13 @@ populate:
 			} while (circle_color_inventory[c] == 0 || c == s);
 
 			m_squares[i][j] = s;
-			m_circles[i][j] = c;
+			m_initial_circles[i][j] = c;
 
 			square_color_inventory[s]--;
 			circle_color_inventory[c]--;
 			rem_squares--;
 
+			// need a loop?
 			for (std::size_t k = 0; k < k_n_colors; k++) {
 				if (circle_color_inventory[k] > rem_squares - square_color_inventory[k]) {
 					goto populate;
@@ -121,18 +141,74 @@ populate:
 	}
 
 	// next: ensure solvable
+
+	reset();
 }
 
 gameboard::~gameboard() {
 	// TODO Auto-generated destructor stub
 }
 
+// grid[0][0] = top left
+//      c  r
+//
+// TODO what to skip:
+// unsolved has no unique elements - skip that line
 void gameboard::shift(shift_direction dir) {
+	std::size_t num;
+	std::size_t len;
+	bool transpose;
 
+	// no transpose
+	if (dir == shift_direction::up || dir == shift_direction::down) {
+		num = k_width;
+		len = k_height;
+		transpose = false;
+	// transpose
+	} else {
+		num = k_height;
+		len = k_width;
+		transpose = true;
+	}
+
+	std::size_t cur;
+	std::size_t prev;
+	std::vector<std::size_t> unsolved;
+	bool unsolved_has_dupes = false;
+	unsigned temp;	// used for holding the first circle during the "trickling phase",
+		// as well as for checking for unique unsolved circles
+	for (std::size_t i = 0; i < num; i++) {
+		for (std::size_t j = 0; j < len; j++) {
+			if (at(cell_object::current_circle, i, j, transpose)
+					!= at(cell_object::square, i, j, transpose)) {
+				if (unsolved.size() == 0) {
+					temp = at(cell_object::current_circle, i, j, transpose);
+				} else if (at(cell_object::current_circle, i, j, transpose) != temp) {
+					unsolved_has_dupes = true;
+				}
+
+				unsolved.push_back(j);
+			}
+		}
+
+		if (unsolved_has_dupes && unsolved.size() > 1) {
+			std::size_t k = 0;
+			temp = at(cell_object::current_circle, i, unsolved[k], transpose);
+			for ( ; k < unsolved.size() - 1; k++) {
+				at(cell_object::current_circle, i, unsolved[k], transpose) =
+					at(cell_object::current_circle, i, unsolved[k + 1], transpose);
+			}
+			at(cell_object::current_circle, i, unsolved[k], transpose) = temp;
+		} else {
+			std::cout << "skip" << std::endl;
+		}
+
+		unsolved.clear();
+	}
 }
 
 void gameboard::reset() {
-
+	m_current_circles = m_initial_circles;
 }
 
 const std::vector<std::vector<unsigned>>& gameboard::squares() const {
@@ -140,7 +216,29 @@ const std::vector<std::vector<unsigned>>& gameboard::squares() const {
 }
 
 const std::vector<std::vector<unsigned>>& gameboard::circles() const {
-	return m_circles;
+	return m_initial_circles;
+}
+
+unsigned& gameboard::at(cell_object obj, std::size_t i,
+		std::size_t j, bool transpose)
+{
+	std::vector<std::vector<unsigned>>* objects;
+
+	switch (obj) {
+	case cell_object::square:
+		objects = &m_squares;
+		break;
+	case cell_object::initial_circle:
+		objects = &m_initial_circles;
+		break;
+	case cell_object::current_circle:
+		objects = &m_current_circles;
+		break;
+	default:
+		break;
+	}
+
+	return transpose ? objects->at(j).at(i) : objects->at(i).at(j);
 }
 
 solutions::solutions(const gameboard& gameboard, unsigned depth) {

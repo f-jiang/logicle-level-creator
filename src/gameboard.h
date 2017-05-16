@@ -22,7 +22,7 @@ public:
 		stuck,
 		solved,
 		unsolved,
-		blank
+		initial
 	};
 
 	enum class shift_direction {
@@ -38,11 +38,22 @@ public:
 //		non_repeating
 	};
 
+	// temp - make a matrix class instead
+	enum class cell_object {
+		square,
+		initial_circle,
+		current_circle
+	};
+
 	gameboard(std::size_t, std::size_t, std::size_t, color_distribution cpop = color_distribution::uniform);
 	virtual ~gameboard();
 
 	const std::vector<std::vector<unsigned>>& squares() const;
 	const std::vector<std::vector<unsigned>>& circles() const;
+
+	// temp
+	void print_initial() const;
+	void print_current() const;
 
 	void shift(shift_direction);
 	void reset();
@@ -50,8 +61,11 @@ private:
 	state m_cur_state;
 	color_distribution m_cdist;
 	std::vector<std::vector<unsigned>> m_squares;
-	std::vector<std::vector<unsigned>> m_circles;
-	std::vector<std::vector<unsigned>> m_cur_circles;
+	std::vector<std::vector<unsigned>> m_initial_circles;
+	std::vector<std::vector<unsigned>> m_current_circles;
+
+	// temp - make a matrix class instead
+	unsigned& at(cell_object, std::size_t, std::size_t, bool transpose = false);
 };
 
 class solutions {
