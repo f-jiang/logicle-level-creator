@@ -44,13 +44,13 @@ void gameboard::print_current() const {
 	}
 }
 
-gameboard::gameboard(std::size_t height,
-		std::size_t width,
+gameboard::gameboard(std::size_t width,
+		std::size_t height,
 		std::size_t n_colors,
 		color_distribution cdist) :
-	k_height(height),
 	k_width(width),
-	k_area(height * width),
+	k_height(height),
+	k_area(width * height),
 	k_n_colors(n_colors > k_area ? k_area : n_colors),
 	m_cur_state(state::initial),
 	m_cdist(cdist)
@@ -63,7 +63,7 @@ gameboard::gameboard(std::size_t height,
 		throw std::invalid_argument("need at least 2 colors");
 	}
 
-	m_squares = std::vector<std::vector<unsigned>>(width, std::vector<unsigned>(height));
+	m_squares = std::vector<std::vector<unsigned>>(k_width, std::vector<unsigned>(k_height));
 	m_initial_circles = m_squares;
 
 	/*
@@ -114,8 +114,8 @@ populate:
 	std::vector<unsigned> circle_color_inventory = color_inventory;
 	std::size_t rem_squares = k_area;
 	std::size_t s, c;
-	for (std::size_t i = 0; i < k_width; i++) {
-		for (std::size_t j = 0; j < k_height; j++) {
+	for (std::size_t x = 0; x < k_width; x++) {
+		for (std::size_t y = 0; y < k_height; y++) {
 			do {
 				s = rand_int(0, k_n_colors);
 			} while (square_color_inventory[s] == 0);
@@ -124,8 +124,8 @@ populate:
 				c = rand_int(0, k_n_colors);
 			} while (circle_color_inventory[c] == 0 || c == s);
 
-			m_squares[i][j] = s;
-			m_initial_circles[i][j] = c;
+			m_squares[x][y] = s;
+			m_initial_circles[x][y] = c;
 
 			square_color_inventory[s]--;
 			circle_color_inventory[c]--;
@@ -150,7 +150,7 @@ gameboard::~gameboard() {
 }
 
 // grid[0][0] = top left
-//      c  r
+//      x  y
 //
 // TODO what to skip:
 // unsolved has no unique elements - skip that line
@@ -177,28 +177,28 @@ void gameboard::shift(shift_direction dir) {
 	bool unsolved_has_dupes = false;
 	unsigned temp;	// used for holding the first circle during the "trickling phase",
 		// as well as for checking for unique unsolved circles
-	for (std::size_t i = 0; i < num; i++) {
-		for (std::size_t j = 0; j < len; j++) {
-			if (at(cell_object::current_circle, i, j, transpose)
-					!= at(cell_object::square, i, j, transpose)) {
+	for (std::size_t x = 0; x < num; x++) {
+		for (std::size_t y = 0; y < len; y++) {
+			if (at(cell_object::current_circle, x, y, transpose)
+					!= at(cell_object::square, x, y, transpose)) {
 				if (unsolved.size() == 0) {
-					temp = at(cell_object::current_circle, i, j, transpose);
-				} else if (at(cell_object::current_circle, i, j, transpose) != temp) {
+					temp = at(cell_object::current_circle, x, y, transpose);
+				} else if (at(cell_object::current_circle, x, y, transpose) != temp) {
 					unsolved_has_dupes = true;
 				}
 
-				unsolved.push_back(j);
+				unsolved.push_back(y);
 			}
 		}
 
 		if (unsolved_has_dupes && unsolved.size() > 1) {
 			std::size_t k = 0;
-			temp = at(cell_object::current_circle, i, unsolved[k], transpose);
+			temp = at(cell_object::current_circle, x, unsolved[k], transpose);
 			for ( ; k < unsolved.size() - 1; k++) {
-				at(cell_object::current_circle, i, unsolved[k], transpose) =
-					at(cell_object::current_circle, i, unsolved[k + 1], transpose);
+				at(cell_object::current_circle, x, unsolved[k], transpose) =
+					at(cell_object::current_circle, x, unsolved[k + 1], transpose);
 			}
-			at(cell_object::current_circle, i, unsolved[k], transpose) = temp;
+			at(cell_object::current_circle, x, unsolved[k], transpose) = temp;
 		} else {
 			std::cout << "skip" << std::endl;
 		}

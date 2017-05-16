@@ -13,8 +13,8 @@
 
 class gameboard {
 public:
-	const std::size_t k_height;
 	const std::size_t k_width;
+	const std::size_t k_height;
 	const std::size_t k_area;
 	const std::size_t k_n_colors;
 
