@@ -37,3 +37,6 @@ Debug/
 .cproject
 .project
 
+# cpp json lib
+src/json.hpp
+
