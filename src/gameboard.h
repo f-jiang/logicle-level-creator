@@ -11,6 +11,8 @@
 #include <cstddef>
 #include <vector>
 
+#include "matrix.h"
+
 class gameboard {
 public:
     const std::size_t k_width;
@@ -38,18 +40,11 @@ public:
 //      non_repeating
     };
 
-    // temp - make a matrix class instead
-    enum class cell_object {
-        square,
-        initial_circle,
-        current_circle
-    };
-
     gameboard(std::size_t, std::size_t, std::size_t, color_distribution cpop = color_distribution::uniform);
     virtual ~gameboard();
 
-    const std::vector<std::vector<unsigned>>& squares() const;
-    const std::vector<std::vector<unsigned>>& circles() const;
+    const matrix<unsigned>& squares() const;
+    const matrix<unsigned>& circles() const;
 
     // temp
     void print_initial() const;
@@ -60,12 +55,9 @@ public:
 private:
     state m_cur_state;
     color_distribution m_cdist;
-    std::vector<std::vector<unsigned>> m_squares;
-    std::vector<std::vector<unsigned>> m_initial_circles;
-    std::vector<std::vector<unsigned>> m_current_circles;
-
-    // temp - make a matrix class instead
-    unsigned& at(cell_object, std::size_t, std::size_t, bool transpose = false);
+    matrix<unsigned> m_squares;
+    matrix<unsigned> m_initial_circles;
+    matrix<unsigned> m_current_circles;
 };
 
 class solutions {

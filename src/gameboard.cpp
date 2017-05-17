@@ -29,7 +29,7 @@ static int rand_int(int min, int max) {
 void gameboard::print_initial() const {
     for (int j = 0; j < k_height; j++) {
         for (int i = 0; i < k_width; i++) {
-            std::cout << m_squares[i][j] << '|' << m_initial_circles[i][j] << ' ';
+            std::cout << m_squares.at(j, i) << '|' << m_initial_circles.at(j, i) << ' ';
         }
         std::cout << std::endl << std::endl;
     }
@@ -38,7 +38,7 @@ void gameboard::print_initial() const {
 void gameboard::print_current() const {
     for (int j = 0; j < k_height; j++) {
         for (int i = 0; i < k_width; i++) {
-            std::cout << m_squares[i][j] << '|' << m_current_circles[i][j] << ' ';
+            std::cout << m_squares.at(j, i) << '|' << m_current_circles.at(j, i) << ' ';
         }
         std::cout << std::endl << std::endl;
     }
@@ -53,7 +53,10 @@ gameboard::gameboard(std::size_t width,
     k_area(width * height),
     k_n_colors(n_colors > k_area ? k_area : n_colors),
     m_cur_state(state::initial),
-    m_cdist(cdist)
+    m_cdist(cdist),
+    m_squares(height, width),
+    m_initial_circles(m_squares),
+    m_current_circles(m_squares)
 {
     if (k_area % 2 != 0 && k_n_colors == 2) {
         throw std::invalid_argument("2 colors and odd area will lead to square-circle color overlap");
@@ -62,9 +65,6 @@ gameboard::gameboard(std::size_t width,
     } else if (k_n_colors < 2) {
         throw std::invalid_argument("need at least 2 colors");
     }
-
-    m_squares = std::vector<std::vector<unsigned>>(k_width, std::vector<unsigned>(k_height));
-    m_initial_circles = m_squares;
 
     /*
      * determine the number of times each color is to be applied to a board grid
@@ -124,8 +124,8 @@ populate:
                 c = rand_int(0, k_n_colors);
             } while (circle_color_inventory[c] == 0 || c == s);
 
-            m_squares[x][y] = s;
-            m_initial_circles[x][y] = c;
+            m_squares.at(y, x) = s;
+            m_initial_circles.at(y, x) = c;
 
             square_color_inventory[s]--;
             circle_color_inventory[c]--;
@@ -171,19 +171,17 @@ void gameboard::shift(shift_direction dir) {
         transpose = true;
     }
 
-    std::size_t cur;
-    std::size_t prev;
     std::vector<std::size_t> unsolved;
     bool unsolved_has_dupes = false;
     unsigned temp;  // used for holding the first circle during the "trickling phase",
         // as well as for checking for unique unsolved circles
     for (std::size_t x = 0; x < num; x++) {
         for (std::size_t y = 0; y < len; y++) {
-            if (at(cell_object::current_circle, x, y, transpose)
-                    != at(cell_object::square, x, y, transpose)) {
+            if (m_current_circles.at(y, x, transpose)
+                    != m_squares.at(y, x, transpose)) {
                 if (unsolved.size() == 0) {
-                    temp = at(cell_object::current_circle, x, y, transpose);
-                } else if (at(cell_object::current_circle, x, y, transpose) != temp) {
+                    temp = m_current_circles.at(y, x, transpose);
+                } else if (m_current_circles.at(y, x, transpose) != temp) {
                     unsolved_has_dupes = true;
                 }
 
@@ -193,12 +191,12 @@ void gameboard::shift(shift_direction dir) {
 
         if (unsolved_has_dupes && unsolved.size() > 1) {
             std::size_t k = 0;
-            temp = at(cell_object::current_circle, x, unsolved[k], transpose);
+            temp = m_current_circles.at(unsolved[k], x, transpose);
             for ( ; k < unsolved.size() - 1; k++) {
-                at(cell_object::current_circle, x, unsolved[k], transpose) =
-                    at(cell_object::current_circle, x, unsolved[k + 1], transpose);
+                m_current_circles.at(unsolved[k], x, transpose) =
+                    m_current_circles.at(unsolved[k + 1], x, transpose);
             }
-            at(cell_object::current_circle, x, unsolved[k], transpose) = temp;
+            m_current_circles.at(unsolved[k], x, transpose) = temp;
         } else {
             std::cout << "skip" << std::endl;
         }
@@ -211,34 +209,12 @@ void gameboard::reset() {
     m_current_circles = m_initial_circles;
 }
 
-const std::vector<std::vector<unsigned>>& gameboard::squares() const {
+const matrix<unsigned>& gameboard::squares() const {
     return m_squares;
 }
 
-const std::vector<std::vector<unsigned>>& gameboard::circles() const {
+const matrix<unsigned>& gameboard::circles() const {
     return m_initial_circles;
-}
-
-unsigned& gameboard::at(cell_object obj, std::size_t i,
-        std::size_t j, bool transpose)
-{
-    std::vector<std::vector<unsigned>>* objects;
-
-    switch (obj) {
-    case cell_object::square:
-        objects = &m_squares;
-        break;
-    case cell_object::initial_circle:
-        objects = &m_initial_circles;
-        break;
-    case cell_object::current_circle:
-        objects = &m_current_circles;
-        break;
-    default:
-        break;
-    }
-
-    return transpose ? objects->at(j).at(i) : objects->at(i).at(j);
 }
 
 solutions::solutions(const gameboard& gameboard, unsigned depth) {
