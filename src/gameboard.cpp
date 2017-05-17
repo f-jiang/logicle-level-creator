@@ -117,11 +117,11 @@ populate:
     for (std::size_t x = 0; x < k_width; x++) {
         for (std::size_t y = 0; y < k_height; y++) {
             do {
-                s = rand_int(0, k_n_colors);
+                s = rand_int(0, k_n_colors - 1);
             } while (square_color_inventory[s] == 0);
 
             do {
-                c = rand_int(0, k_n_colors);
+                c = rand_int(0, k_n_colors - 1);
             } while (circle_color_inventory[c] == 0 || c == s);
 
             m_squares.at(y, x) = s;
