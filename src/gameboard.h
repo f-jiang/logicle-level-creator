@@ -41,7 +41,7 @@ public:
     };
 
     gameboard(std::size_t, std::size_t, std::size_t, color_distribution cpop = color_distribution::uniform);
-    virtual ~gameboard();
+    ~gameboard();
 
     const matrix<unsigned>& squares() const;
     const matrix<unsigned>& initial_circles() const;

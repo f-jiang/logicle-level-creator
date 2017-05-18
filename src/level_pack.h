@@ -37,7 +37,7 @@
 class level_pack {
 public:
     level_pack();
-    virtual ~level_pack();
+    ~level_pack();
 };
 
 #endif /* LEVEL_PACK_H_ */
