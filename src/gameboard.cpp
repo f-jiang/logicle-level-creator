@@ -196,8 +196,6 @@ void gameboard::shift(shift_direction dir) {
                     m_current_circles.at(unsolved[k + 1], x, transpose);
             }
             m_current_circles.at(unsolved[k], x, transpose) = temp;
-        } else {
-            std::cout << "skip" << std::endl;
         }
 
         unsolved.clear();
