@@ -55,8 +55,7 @@ gameboard::gameboard(std::size_t width,
     m_cur_state(state::initial),
     m_cdist(cdist),
     m_squares(height, width),
-    m_initial_circles(m_squares),
-    m_current_circles(m_squares)
+    m_initial_circles(m_squares)
 {
     if (k_area % 2 != 0 && k_n_colors == 2) {
         throw std::invalid_argument("2 colors and odd area will lead to square-circle color overlap");
