@@ -23,6 +23,7 @@ public:
     matrix(const matrix<T>&);
 
     matrix<T>& operator=(const matrix<T>&);
+    bool operator==(const matrix<T>&) const;
 
     T& at(std::size_t, std::size_t, bool = false);
     const T& at(std::size_t, std::size_t, bool = false) const;
@@ -77,6 +78,11 @@ matrix<T>& matrix<T>::operator=(const matrix<T>& mat) {
     m_data = mat.m_data;
 
     return *this;
+}
+
+template<class T>
+bool matrix<T>::operator==(const matrix<T>& mat) const {
+    return m_data == mat.m_data;
 }
 
 template<class T>

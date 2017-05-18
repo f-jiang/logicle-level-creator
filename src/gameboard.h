@@ -44,7 +44,8 @@ public:
     virtual ~gameboard();
 
     const matrix<unsigned>& squares() const;
-    const matrix<unsigned>& circles() const;
+    const matrix<unsigned>& initial_circles() const;
+    const matrix<unsigned>& current_circles() const;
 
     // temp
     void print_initial() const;

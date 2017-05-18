@@ -173,7 +173,7 @@ void gameboard::shift(shift_direction dir) {
     std::vector<std::size_t> unsolved;
     bool unsolved_has_dupes = false;
     unsigned temp;  // used for holding the first circle during the "trickling phase",
-        // as well as for checking for unique unsolved circles
+        // as well as for checking for unique unsolved current_circles
     for (std::size_t x = 0; x < num; x++) {
         for (std::size_t y = 0; y < len; y++) {
             if (m_current_circles.at(y, x, transpose)
@@ -210,8 +210,12 @@ const matrix<unsigned>& gameboard::squares() const {
     return m_squares;
 }
 
-const matrix<unsigned>& gameboard::circles() const {
+const matrix<unsigned>& gameboard::initial_circles() const {
     return m_initial_circles;
+}
+
+const matrix<unsigned>& gameboard::current_circles() const {
+    return m_current_circles;
 }
 
 solutions::solutions(const gameboard& gameboard, unsigned depth) {
