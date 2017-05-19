@@ -47,6 +47,8 @@ public:
     const matrix<unsigned>& initial_circles() const;
     const matrix<unsigned>& current_circles() const;
 
+    std::vector<shift_direction> solution();
+
     // temp
     void print_initial() const;
     void print_current() const;

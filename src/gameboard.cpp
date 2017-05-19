@@ -13,6 +13,16 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <ctime>
+#include <queue>
+#include <set>
+#include <sstream>
+
+static gameboard::shift_direction directions[] = {
+    gameboard::shift_direction::up,
+    gameboard::shift_direction::down,
+    gameboard::shift_direction::left,
+    gameboard::shift_direction::right
+};
 
 static int rand_int(int min, int max) {
     static bool ready = false;
@@ -24,6 +34,17 @@ static int rand_int(int min, int max) {
     }
 
     return rand() % (max + 1 - min) + min;
+}
+
+// temp
+static std::string matrix_to_string(const matrix<unsigned>& mat) {
+    std::ostringstream osstr;
+    for (std::size_t i = 0; i < mat.n_rows(); i++) {
+        for (std::size_t j = 0; j < mat.n_cols(); j++) {
+            osstr << mat.at(i, j);
+        }
+    }
+    return osstr.str();
 }
 
 void gameboard::print_initial() const {
@@ -228,6 +249,63 @@ const matrix<unsigned>& gameboard::initial_circles() const {
 
 const matrix<unsigned>& gameboard::current_circles() const {
     return m_current_circles;
+}
+
+std::vector<gameboard::shift_direction> gameboard::solution() {
+    // temp stats
+    unsigned long long num_iterations = 0;
+    unsigned long long num_nodes_visited = 1;
+    unsigned long long num_paths_considered = 0;
+
+    bool solved = false;
+    std::queue<std::vector<gameboard::shift_direction>> next;
+    std::set<std::string> visited;
+    std::vector<gameboard::shift_direction> path;
+    std::string mat;
+    matrix<unsigned> temp;
+
+    visited.insert(matrix_to_string(m_initial_circles));
+
+    do {
+        // if continuing from a previous path, we first need to move the gameboard
+        // into its state after that path
+        if (!next.empty()) {
+            path = next.front();
+            for (gameboard::shift_direction dir : path) {
+                shift(dir);
+            }
+            next.pop();
+        }
+
+        if (m_current_circles == m_squares) {
+            solved = true;
+        } else {
+            temp = m_current_circles;
+            for (gameboard::shift_direction dir : directions) {
+                m_current_circles = temp;
+                shift(dir);
+                mat = matrix_to_string(m_current_circles);
+
+                if (visited.count(mat) == 0) {
+                    path.push_back(dir);
+                    next.push(path);
+                    visited.insert(mat);
+
+                    num_paths_considered++;
+                }
+            }
+        }
+
+        m_current_circles = m_initial_circles;
+
+        num_iterations++;
+    } while (!solved && !next.empty());
+
+    // temp
+    num_nodes_visited = visited.size();
+    std::cout << num_iterations << " iterations, " << num_nodes_visited << " nodes visited" << std::endl;
+
+    return solved ? path : std::vector<gameboard::shift_direction>();
 }
 
 solutions::solutions(const gameboard& gameboard, unsigned depth) {
