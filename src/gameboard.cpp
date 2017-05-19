@@ -171,7 +171,7 @@ void gameboard::shift(shift_direction dir) {
     }
 
     std::vector<std::size_t> unsolved;
-    bool unsolved_has_dupes = false;
+    bool unsolved_has_dupes = true;
     unsigned temp;  // used for holding the first circle during the "trickling phase",
         // as well as for checking for unique unsolved current_circles
     for (std::size_t x = 0; x < num; x++) {
@@ -181,20 +181,32 @@ void gameboard::shift(shift_direction dir) {
                 if (unsolved.size() == 0) {
                     temp = m_current_circles.at(y, x, transpose);
                 } else if (m_current_circles.at(y, x, transpose) != temp) {
-                    unsolved_has_dupes = true;
+                    unsolved_has_dupes = false;
                 }
 
                 unsolved.push_back(y);
             }
         }
 
-        if (unsolved_has_dupes && unsolved.size() > 1) {
-            std::size_t k = 0;
-            temp = m_current_circles.at(unsolved[k], x, transpose);
-            for ( ; k < unsolved.size() - 1; k++) {
-                m_current_circles.at(unsolved[k], x, transpose) =
-                    m_current_circles.at(unsolved[k + 1], x, transpose);
+        if (!unsolved_has_dupes && unsolved.size() > 1) {
+            std::size_t k;
+
+            if (dir == gameboard::shift_direction::up || dir == gameboard::shift_direction::left) {
+                k = 0;
+                temp = m_current_circles.at(unsolved[k], x, transpose);
+                for ( ; k < unsolved.size() - 1; k++) {
+                    m_current_circles.at(unsolved[k], x, transpose) =
+                        m_current_circles.at(unsolved[k + 1], x, transpose);
+                }
+            } else {
+                k = unsolved.size() - 1;
+                temp = m_current_circles.at(unsolved[k], x, transpose);
+                for ( ; k > 0; k--) {
+                    m_current_circles.at(unsolved[k], x, transpose) =
+                        m_current_circles.at(unsolved[k - 1], x, transpose);
+                }
             }
+
             m_current_circles.at(unsolved[k], x, transpose) = temp;
         }
 
