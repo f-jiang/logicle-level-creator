@@ -87,12 +87,12 @@ bool matrix<T>::operator==(const matrix<T>& mat) const {
 
 template<class T>
 T& matrix<T>::at(std::size_t i, std::size_t j, bool transpose) {
-    return transpose ? m_data.at(j * m_n_rows + i) : m_data.at(i * m_n_cols + j);
+    return transpose ? m_data.at(j * m_n_cols + i) : m_data.at(i * m_n_cols + j);
 }
 
 template<class T>
 const T& matrix<T>::at(std::size_t i, std::size_t j, bool transpose) const {
-    return transpose ? m_data.at(j * m_n_rows + i) : m_data.at(i * m_n_cols + j);
+    return transpose ? m_data.at(j * m_n_cols + i) : m_data.at(i * m_n_cols + j);
 }
 
 template<class T>
