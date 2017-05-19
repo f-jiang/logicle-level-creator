@@ -48,15 +48,16 @@ int main(int argc, char* argv[]) {
     cin >> h;
     cout << "num colors: ";
     cin >> n;
-    // area of 7 with 6 colours leads to SIGABRT after goto
+    cout << "generating gameboard..." << std::endl;
     gameboard g(w, h, n);
+    cout << "checking for solutions..." << std::endl;
+    vector<gameboard::shift_direction> solution = g.solution();
 
     g.print_initial();
 
-    std::cout << "w: up, s: down, a: left, d: right, r: reset, q: quit" << std::endl;
-
     char choice;
     do {
+        std::cout << "w: up, s: down, a: left, d: right, f: solution, r: reset, q: quit" << std::endl;
         std::cin >> choice;
         switch (choice) {
         case 'w':
@@ -74,6 +75,32 @@ int main(int argc, char* argv[]) {
         case 'd':
             g.shift(gameboard::shift_direction::right);
             g.print_current();
+            break;
+        case 'f':
+            if (solution.empty()) {
+                std::cout << "no solution" << std::endl;
+            } else {
+                std::cout << "solution:" << std::endl;
+                for (gameboard::shift_direction d : solution) {
+                    switch (d) {
+                    case gameboard::shift_direction::up:
+                        std::cout << "up ";
+                        break;
+                    case gameboard::shift_direction::down:
+                        std::cout << "down ";
+                        break;
+                    case gameboard::shift_direction::left:
+                        std::cout << "left ";
+                        break;
+                    case gameboard::shift_direction::right:
+                        std::cout << "right ";
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                std::cout << std::endl;
+            }
             break;
         case 'r':
             g.reset();
