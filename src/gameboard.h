@@ -10,10 +10,12 @@
 
 #include <cstddef>
 #include <vector>
+#include <ostream>
 
 #include "matrix.h"
 
 class gameboard {
+friend std::ostream& operator<<(std::ostream&, const gameboard&);
 public:
     const std::size_t k_width;
     const std::size_t k_height;
@@ -48,10 +50,6 @@ public:
     const matrix<unsigned>& current_circles() const;
 
     std::vector<shift_direction> solution();
-
-    // temp
-    void print_initial() const;
-    void print_current() const;
 
     void shift(shift_direction);
     void reset();

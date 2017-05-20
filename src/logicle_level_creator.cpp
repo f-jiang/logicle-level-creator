@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
     cout << "checking for solutions..." << std::endl;
     vector<gameboard::shift_direction> solution = g.solution();
 
-    g.print_initial();
+    std::cout << g;
 
     char choice;
     do {
@@ -62,19 +62,19 @@ int main(int argc, char* argv[]) {
         switch (choice) {
         case 'w':
             g.shift(gameboard::shift_direction::up);
-            g.print_current();
+            std::cout << g;
             break;
         case 's':
             g.shift(gameboard::shift_direction::down);
-            g.print_current();
+            std::cout << g;
             break;
         case 'a':
             g.shift(gameboard::shift_direction::left);
-            g.print_current();
+            std::cout << g;
             break;
         case 'd':
             g.shift(gameboard::shift_direction::right);
-            g.print_current();
+            std::cout << g;
             break;
         case 'f':
             if (solution.empty()) {
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
             break;
         case 'r':
             g.reset();
-            g.print_current();
+            std::cout << g;
             break;
         default:
             break;

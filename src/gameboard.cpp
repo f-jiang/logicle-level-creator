@@ -47,24 +47,6 @@ static std::string matrix_to_string(const matrix<unsigned>& mat) {
     return osstr.str();
 }
 
-void gameboard::print_initial() const {
-    for (int j = 0; j < k_height; j++) {
-        for (int i = 0; i < k_width; i++) {
-            std::cout << m_squares.at(j, i) << '|' << m_initial_circles.at(j, i) << ' ';
-        }
-        std::cout << std::endl << std::endl;
-    }
-}
-
-void gameboard::print_current() const {
-    for (int j = 0; j < k_height; j++) {
-        for (int i = 0; i < k_width; i++) {
-            std::cout << m_squares.at(j, i) << '|' << m_current_circles.at(j, i) << ' ';
-        }
-        std::cout << std::endl << std::endl;
-    }
-}
-
 gameboard::gameboard(std::size_t width,
         std::size_t height,
         std::size_t n_colors,
@@ -306,6 +288,17 @@ std::vector<gameboard::shift_direction> gameboard::solution() {
     std::cout << num_iterations << " iterations, " << num_nodes_visited << " nodes visited" << std::endl;
 
     return solved ? path : std::vector<gameboard::shift_direction>();
+}
+
+std::ostream& operator<<(std::ostream& os, const gameboard& g) {
+    for (std::size_t j = 0; j < g.k_height; j++) {
+        for (std::size_t i = 0; i < g.k_width; i++) {
+            std::cout << g.m_squares.at(j, i) << '|' << g.m_current_circles.at(j, i) << ' ';
+        }
+        std::cout << std::endl << std::endl;
+    }
+
+    return os;
 }
 
 solutions::solutions(const gameboard& gameboard, unsigned depth) {
