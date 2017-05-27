@@ -59,30 +59,32 @@ matrix<T>::matrix(std::size_t n_rows, std::size_t n_cols, const T& val) :
     m_n_rows(n_rows),
     m_n_cols(n_cols),
     m_area(n_rows * n_cols),
-    m_data(m_area, 0)
+    m_data(m_area, val)
 { }
 
 template<class T>
-matrix<T>::matrix(const matrix<T>& mat) :
-    m_n_rows(mat.m_n_rows),
-    m_n_cols(mat.m_n_cols),
-    m_area(mat.m_area),
-    m_data(mat.m_data)
+matrix<T>::matrix(const matrix<T>& other) :
+    m_n_rows(other.m_n_rows),
+    m_n_cols(other.m_n_cols),
+    m_area(other.m_area),
+    m_data(other.m_data)
 { }
 
 template<class T>
-matrix<T>& matrix<T>::operator=(const matrix<T>& mat) {
-    m_n_rows = mat.m_n_rows;
-    m_n_cols = mat.m_n_cols;
-    m_area = mat.m_area;
-    m_data = mat.m_data;
+matrix<T>& matrix<T>::operator=(const matrix<T>& other) {
+    if (&other != this) {
+        m_n_rows = other.m_n_rows;
+        m_n_cols = other.m_n_cols;
+        m_area = other.m_area;
+        m_data = other.m_data;
+    }
 
     return *this;
 }
 
 template<class T>
-bool matrix<T>::operator==(const matrix<T>& mat) const {
-    return m_data == mat.m_data;
+bool matrix<T>::operator==(const matrix<T>& other) const {
+    return m_data == other.m_data;
 }
 
 template<class T>

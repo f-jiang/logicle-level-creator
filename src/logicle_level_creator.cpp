@@ -9,7 +9,7 @@
 #include <iostream>
 #include <cstdlib>
 #include "gameboard.h"
-#include "json.hpp"
+//#include "json.hpp"
 
 using namespace std;
 /*
@@ -51,13 +51,13 @@ int main(int argc, char* argv[]) {
     cout << "generating gameboard..." << std::endl;
     gameboard g(w, h, n);
     cout << "checking for solutions..." << std::endl;
-    vector<gameboard::shift_direction> solution = g.solution();
+    solution_set solutions(g);
 
     std::cout << g;
 
     char choice;
     do {
-        std::cout << "w: up, s: down, a: left, d: right, f: solution, r: reset, q: quit" << std::endl;
+        std::cout << "w: up, s: down, a: left, d: right, f: solutions, r: reset, q: quit" << std::endl;
         std::cin >> choice;
         switch (choice) {
         case 'w':
@@ -77,29 +77,8 @@ int main(int argc, char* argv[]) {
             std::cout << g;
             break;
         case 'f':
-            if (solution.empty()) {
-                std::cout << "no solution" << std::endl;
-            } else {
-                std::cout << "solution:" << std::endl;
-                for (gameboard::shift_direction d : solution) {
-                    switch (d) {
-                    case gameboard::shift_direction::up:
-                        std::cout << "up ";
-                        break;
-                    case gameboard::shift_direction::down:
-                        std::cout << "down ";
-                        break;
-                    case gameboard::shift_direction::left:
-                        std::cout << "left ";
-                        break;
-                    case gameboard::shift_direction::right:
-                        std::cout << "right ";
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                std::cout << std::endl;
+            for (std::size_t i = 0; i <  solutions.n_solns(); i++) {
+                std::cout << solutions[i];
             }
             break;
         case 'r':
