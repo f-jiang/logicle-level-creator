@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
             std::cout << g;
             break;
         case 'f':
-            for (std::size_t i = 0; i <  solutions.n_solns(); i++) {
+            for (std::size_t i = 0; i <  solutions.n_solutions(); i++) {
                 std::cout << solutions[i];
             }
             break;

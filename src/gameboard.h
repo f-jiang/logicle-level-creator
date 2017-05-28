@@ -79,7 +79,7 @@ public:
     solution_set(gameboard);
 
     const float difficulty() const;
-    const std::size_t n_solns() const;
+    const std::size_t n_solutions() const;
 
     const solution& operator[](std::size_t) const;
 

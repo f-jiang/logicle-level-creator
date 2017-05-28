@@ -377,7 +377,7 @@ const float solution_set::difficulty() const {
     return m_difficulty;
 }
 
-const std::size_t solution_set::n_solns() const {
+const std::size_t solution_set::n_solutions() const {
     return m_n_solns;
 }
 
