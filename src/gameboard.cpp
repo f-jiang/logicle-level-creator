@@ -388,7 +388,7 @@ const solution_set::solution& solution_set::operator[](std::size_t n) const {
 const std::vector<solution_set::solution> solution_set::solutions_with_length(std::size_t n) const {
     std::vector<solution> solns;
     for (const solution& sol : m_data) {
-        if (m_data.size() == n) {
+        if (sol.size() == n) {
             solns.push_back(sol);
         }
     }
