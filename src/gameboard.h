@@ -37,6 +37,9 @@ public:
 //      non_repeating
     };
 
+    // TODO appropriate for default ctor to generate a useless object, merely to
+    // allow declaration of a solution_set object member inside the ctor body?
+    gameboard() = default;
     gameboard(std::size_t, std::size_t, std::size_t, color_distribution = color_distribution::uniform);
     gameboard(const gameboard&);
 
@@ -76,6 +79,9 @@ class solution_set {
 public:
     typedef std::vector<gameboard::shift_direction> solution;
 
+    // TODO appropriate for default ctor to generate a useless object, merely to
+    // allow declaration of a solution_set object member inside the ctor body?
+    solution_set() = default;
     solution_set(gameboard);
 
     const float difficulty() const;
