@@ -7,27 +7,88 @@
 
 #include "level.h"
 
+#include <stdexcept>
+
 level::level(std::size_t height,
         std::size_t width,
-        const std::vector<unsigned>& colors,
+        const std::vector<unsigned> colors,
         gameboard::color_distribution cpop) :
     m_gameboard(height, width, colors.size(), cpop),
-    m_colors(colors)
-//    m_solutions(m_gameboard)    // m_gameboard comes before m_solutions in level.h, so can be used here
-{
+    m_colors(colors),
+    m_solns(m_gameboard)
+{ }
 
+level::level(const gameboard& gameboard,
+        const solution_set& solutions,
+        const std::vector<unsigned> colors)
+{
+    if (colors.size() < gameboard.n_colors()) {
+        throw std::invalid_argument("not enough colors provided for gameboard");
+    }
+
+    m_gameboard = gameboard;
+    m_colors = colors;
+    m_solns = solutions;
 }
 
 level::level(const gameboard& gameboard,
-        const std::vector<unsigned>& colors) :
-    m_gameboard(gameboard),
-    m_colors(colors)
-//    m_solutions(gameboard)
+        const std::vector<unsigned> colors)
 {
-    // TODO Auto-generated constructor stub
+    if (colors.size() < gameboard.n_colors()) {
+        throw std::invalid_argument("not enough colors provided for gameboard");
+    }
 
+    m_gameboard = gameboard;
+    m_colors = colors;
+    m_solns = solution_set(gameboard);
 }
 
-level::~level() {
-    // TODO Auto-generated destructor stub
+nlohmann::json level::as_json() {
+    std::vector<std::vector<unsigned>> circles_json(
+        m_gameboard.width(),
+        std::vector<unsigned>(m_gameboard.height())
+    );
+    std::vector<std::vector<unsigned>> squares_json = circles_json;
+
+    for (std::size_t j = 0; j < m_gameboard.width(); j++) {
+        for (std::size_t i = 0; i < m_gameboard.height(); i++) {
+            circles_json[j][i] = m_gameboard.initial_circles().at(i, j);
+            squares_json[j][i] = m_gameboard.squares().at(i, j);
+        }
+    }
+
+    nlohmann::json j = {
+        { "area", m_gameboard.area() },
+        { "widthSquares", m_gameboard.width() },
+        { "heightSquares", m_gameboard.height() },
+        { "difficulty", m_solns.difficulty() },
+        { "longestSolution", m_solns.longest_solution().size() },
+        { "shortestSolution", m_solns.shortest_solution().size() },
+        { "colors", m_colors },
+        { "num_colors", m_colors.size() },
+        { "circles", circles_json },
+        { "squares", squares_json }
+    };
+
+    return j;
+}
+
+std::size_t level::gameboard_width() const {
+    return m_gameboard.width();
+}
+
+std::size_t level::gameboard_height() const {
+    return m_gameboard.height();
+}
+
+float level::difficulty() const {
+    return m_solns.difficulty();
+}
+
+std::size_t level::n_colors() const {
+    return m_gameboard.n_colors();
+}
+
+std::size_t level::n_solutions() const {
+    return m_solns.n_solutions();
 }
