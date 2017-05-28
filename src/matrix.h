@@ -20,9 +20,9 @@ public:
     matrix();
     matrix(std::size_t, std::size_t);
     matrix(std::size_t, std::size_t, const T&);
-    matrix(const matrix<T>&);
+    matrix(const matrix<T>&);   // TODO implicitly declared
 
-    matrix<T>& operator=(const matrix<T>&);
+    matrix<T>& operator=(const matrix<T>&); // TODO implicitly declared
     bool operator==(const matrix<T>&) const;
 
     T& at(std::size_t, std::size_t, bool = false);

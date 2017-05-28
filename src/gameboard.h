@@ -1,6 +1,7 @@
 #ifndef GAMEBOARD_H_
 #define GAMEBOARD_H_
 
+// TODO remove unneeded includes
 #include <cstddef>
 #include <vector>
 #include <ostream>
@@ -11,6 +12,8 @@
 // TODO use a shortest-path algo for is_solvable()
 // TODO non-repeating color dist
 // TODO save memory using reference params where possible
+// TODO remove matrix_to_string() if it isn't needed
+// TODO when too many colors, throw exception or ignore?
 class gameboard {
 friend class solution_set;
 public:
