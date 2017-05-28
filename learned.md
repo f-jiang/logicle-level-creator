@@ -5,11 +5,17 @@
 - C++ <random> utilities
 - C++ <sstream> utilities (namely ostringstream)
 - C++ exceptions
+- file streams
+
+#### JSON for modern C++
 
 ### Language features
 
 - scoped enums using the "class" keyword
 - friend classes and functions
+- raw strings R"()"
+- abstract classes and interfaces using virtual and pure virtual functions
+- 'default' fns: use compiler-generated version of the fn
 
 ### Algorithms
 
