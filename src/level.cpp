@@ -65,7 +65,7 @@ nlohmann::json level::as_json() {
         { "longestSolution", m_solns.longest_solution().size() },
         { "shortestSolution", m_solns.shortest_solution().size() },
         { "colors", m_colors },
-        { "num_colors", m_colors.size() },
+        { "numColors", m_colors.size() },
         { "circles", circles_json },
         { "squares", squares_json }
     };
