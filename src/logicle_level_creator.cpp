@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
         c = distribution(generator);
     }
 
-    level l(g, solutions, { 0x000000, 0x111111, 0x222222 });
+    level l(g, solutions, colors);
 
     std::cout << g;
 
