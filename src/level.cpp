@@ -4,7 +4,7 @@
 
 level::level(std::size_t height,
         std::size_t width,
-        const std::vector<unsigned> colors,
+        std::vector<unsigned> colors,
         gameboard::color_distribution cpop) :
     m_gameboard(height, width, colors.size(), cpop),
     m_colors(colors),
@@ -13,7 +13,7 @@ level::level(std::size_t height,
 
 level::level(const gameboard& gameboard,
         const solution_set& solutions,
-        const std::vector<unsigned> colors)
+        std::vector<unsigned> colors)
 {
     if (colors.size() < gameboard.n_colors()) {
         throw std::invalid_argument("not enough colors provided for gameboard");
@@ -25,7 +25,7 @@ level::level(const gameboard& gameboard,
 }
 
 level::level(const gameboard& gameboard,
-        const std::vector<unsigned> colors)
+        std::vector<unsigned> colors)
 {
     if (colors.size() < gameboard.n_colors()) {
         throw std::invalid_argument("not enough colors provided for gameboard");

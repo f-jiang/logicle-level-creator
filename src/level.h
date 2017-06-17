@@ -11,10 +11,10 @@ class level : public json_serializable {
 public:
     level(std::size_t,
           std::size_t,
-          const std::vector<unsigned>,
+          std::vector<unsigned>,
           gameboard::color_distribution = gameboard::color_distribution::uniform);
-    level(const gameboard&, const solution_set&, const std::vector<unsigned>);
-    level(const gameboard&, const std::vector<unsigned>);
+    level(const gameboard&, const solution_set&, std::vector<unsigned>);
+    level(const gameboard&, std::vector<unsigned>);
 
     nlohmann::json as_json() const;
 
