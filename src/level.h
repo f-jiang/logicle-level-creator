@@ -16,7 +16,7 @@ public:
     level(const gameboard&, const solution_set&, const std::vector<unsigned>);
     level(const gameboard&, const std::vector<unsigned>);
 
-    nlohmann::json as_json();
+    nlohmann::json as_json() const;
 
     std::size_t gameboard_width() const;
     std::size_t gameboard_height() const;

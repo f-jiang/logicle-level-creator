@@ -36,7 +36,7 @@ level::level(const gameboard& gameboard,
     m_solns = solution_set(gameboard);
 }
 
-nlohmann::json level::as_json() {
+nlohmann::json level::as_json() const {
     std::vector<std::vector<unsigned>> circles_json(
         m_gameboard.width(),
         std::vector<unsigned>(m_gameboard.height())

@@ -7,7 +7,7 @@ class json_serializable {
 public:
     virtual ~json_serializable() { };
 
-    virtual nlohmann::json as_json() = 0;
+    virtual nlohmann::json as_json() const = 0;
 };
 
 #endif /* JSON_SERIALIZABLE_H_ */
