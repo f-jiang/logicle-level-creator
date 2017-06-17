@@ -1,10 +1,3 @@
-/*
- * matrix.h
- *
- *  Created on: May 15, 2017
- *      Author: feilan
- */
-
 #ifndef MATRIX_H_
 #define MATRIX_H_
 

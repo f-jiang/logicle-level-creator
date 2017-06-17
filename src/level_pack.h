@@ -1,10 +1,4 @@
 /*
- * levelpack.h
- *
- *  Created on: May 13, 2017
- *      Author: feilan
- */
-/*
  * classes:
  * Gameboard
  * - data for circles and squares

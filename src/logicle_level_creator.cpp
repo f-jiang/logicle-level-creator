@@ -1,11 +1,3 @@
-//============================================================================
-// Name        : logicle-level-creator.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
@@ -15,33 +7,6 @@
 #include "level.h"
 
 using namespace std;
-/*
- * classes:
- * Gameboard
- * - data for circles and squares
- * - dimensions
- * - area
- * - state
- * - shift
- * - reset
- * - colorPopulation
- * - print op
- * Level
- * - colors
- * - gameboard
- * - solutions
- * Solutions
- * - difficulty
- * - each solution as a sequence of moves
- * - lengths of solutions
- *
- * LevelPack
- * - num levels
- * - sort levels
- * - duplicate removal
- * - sections
- *
- */
 
 int main(int argc, char* argv[]) {
     std::size_t w, h, n;

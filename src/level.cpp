@@ -1,10 +1,3 @@
-/*
- * level.cpp
- *
- *  Created on: May 13, 2017
- *      Author: feilan
- */
-
 #include "level.h"
 
 #include <stdexcept>

@@ -1,10 +1,3 @@
-/*
- * level.h
- *
- *  Created on: May 13, 2017
- *      Author: feilan
- */
-
 #ifndef LEVEL_H_
 #define LEVEL_H_
 
