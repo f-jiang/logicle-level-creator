@@ -9,6 +9,8 @@
 
 class level : public json_serializable {
 public:
+    // TODO initializer_list instead of vector?
+    // TODO exception when duplicate colours
     level(std::size_t,
           std::size_t,
           std::vector<unsigned>,

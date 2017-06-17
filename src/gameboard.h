@@ -40,6 +40,7 @@ public:
     // TODO appropriate for default ctor to generate a useless object, merely to
     // allow declaration of a solution_set object member inside the ctor body?
     gameboard() = default;
+    // TODO reverse order of first two params, width and height, to height and width
     gameboard(std::size_t, std::size_t, std::size_t, color_distribution = color_distribution::uniform);
     gameboard(const gameboard&);
 
