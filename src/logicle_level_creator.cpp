@@ -5,10 +5,17 @@
 #include "gameboard.h"
 #include "json.hpp"
 #include "level.h"
+#include "level_pack.h"
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
+unsigned rand_color() {
+    static std::default_random_engine generator;
+    static std::uniform_int_distribution<int> distribution(0x0, 0xFFFFFF);
+    return distribution(generator);
+}
+
+void test_level() {
     std::size_t w, h, n;
     cout << "width: ";
     cin >> w;
@@ -21,12 +28,9 @@ int main(int argc, char* argv[]) {
     cout << "checking for solutions..." << std::endl;
     solution_set solutions(g);
 
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(0x0, 0xFFFFFF);
     std::vector<unsigned> colors(n);
-
     for (unsigned& c : colors) {
-        c = distribution(generator);
+        c = rand_color();
     }
 
     level l(g, solutions, colors);
@@ -71,5 +75,20 @@ int main(int argc, char* argv[]) {
         }
     } while (choice != 'q');
 
+}
+
+void test_level_pack() {
+    std::ofstream fout("level_pack.json");
+    level_pack levels;
+
+    levels.add_category("2x2 Boards", {2, 2, {rand_color(), rand_color(), rand_color()}, 1, gameboard::color_distribution::uniform});
+
+    fout << levels.as_json().dump(4);
+    fout.close();
+}
+
+int main(int argc, char* argv[]) {
+    // test_level();
+    test_level_pack();
     return 0;
 }

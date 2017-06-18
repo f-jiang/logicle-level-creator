@@ -13,66 +13,44 @@ std::list<level_pack::category>::iterator level_pack::find_category(std::string 
     );
 }
 
-template<class T>
-void level_pack::add_category_base(std::list<level_pack::category>::iterator cat, T group) {
-    std::size_t size = std::tuple_size<decltype(group)>::value;
+void level_pack::add_group(level_pack::category& cat, level_pack::category::group_properties group) {
+    std::size_t old_size = cat.levels.size();
 
-    if (size < 3) {
-        throw std::length_error("level category group needs at least 3 properties");
-    } else {
-        std::size_t width = std::get<0>(group);
-        std::size_t height = std::get<1>(group);
-        std::vector<unsigned> colors = std::get<2>(group);
-        std::size_t num_levels = (size == 4) ? std::get<3>(group) : 1;
-        std::size_t old_size = cat->levels.size();
+    for (std::size_t i = 0; i < group.n_levels; i++) {
+        cat.levels.push_back(level(group.width, group.height, group.colors, group.color_dist));
+    }
 
-        if (size == 5) {
-            for (std::size_t i = 0; i < num_levels; i++) {
-                cat->levels.push_back(level(height, width, colors, std::get<4>(group)));
-            }
-        } else {
-            for (std::size_t i = 0; i < num_levels; i++) {
-                cat->levels.push_back(level(height, width, colors));
-            }
+    std::sort(cat.levels.begin() + old_size - 1, cat.levels.end(),
+        [] (const level& a, const level& b) {
+            return a.difficulty() < b.difficulty();
         }
-
-        std::sort(cat->levels.begin() + old_size - 1, cat->levels.end(),
-            [] (const level& a, const level& b) {
-                return a.difficulty() < b.difficulty();
-            }
-        );
-    }
+    );
 }
 
-template<class T, class... Groups>
-void level_pack::add_category_recursive(std::list<level_pack::category>::iterator cat, T group, Groups... rest) {
-    add_category_base(cat, group);
-    add_category_recursive(cat, rest...);
-}
-
-template<class T>
-void level_pack::add_category(std::string name, T group) {
+void level_pack::add_category(std::string name, level_pack::category::group_properties group) {
     if (find_category(name) != m_data.end()) {
         std::ostringstream osstr;
         osstr << "there already exists a category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
     } else {
-        m_data.push_back({});
-        add_category_base(m_data.end(), group);
+        std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+        add_group(*cat, group);
     }
 }
 
-template<class T, class... Groups>
-void level_pack::add_category(std::string name, T group, Groups... rest) {
+void level_pack::add_category(std::string name, std::vector<level_pack::category::group_properties> groups) {
     if (find_category(name) != m_data.end()) {
         std::ostringstream osstr;
         osstr << "there already exists a category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
     } else {
-        m_data.push_back({});
-        add_category_recursive(m_data.end(), group, rest...);
+        std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+
+        for (category::group_properties& g : groups) {
+            add_group(*cat, g);
+        }
     }
 }
 

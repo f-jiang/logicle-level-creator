@@ -12,20 +12,23 @@
 class level_pack : public json_serializable {
 private:
     struct category {
-        std::vector<level> levels;
-        std::size_t n_levels;
+        struct group_properties {
+            std::size_t height;
+            std::size_t width;
+            std::vector<unsigned> colors;
+            std::size_t n_levels;
+            gameboard::color_distribution color_dist;
+        };
+
         std::string name;
+        std::vector<level> levels;
     };
 
     std::list<category> m_data;
 
     std::list<category>::iterator find_category(std::string);
+    void add_group(category&, category::group_properties);
 
-    template<class T>
-    void add_category_base(std::list<category>::iterator, T);
-
-    template<class T, class... Groups>
-    void add_category_recursive(std::list<category>::iterator, T, Groups...);
 public:
     /*
      * Constructs an empty level pack.
@@ -36,21 +39,19 @@ public:
      * Adds a category to the level pack. Each category can be further organized into groups which contain
      * any number of levels with matching properties.
      *
-     * The "group" tuple format is as follows: { width, height, colors, [num_levels = 1], [color_distribution = uniform] }
-     * - std::size_t: width of the gameboard
+     * The "group" struct format is as follows: { height, width, colors, [num_levels = 1], [color_distribution = uniform] }
      * - std::size_t: height of the gameboard
+     * - std::size_t: width of the gameboard
      * - vector<unsigned>: colors to use for the gameboard
      * - std::size_t: number of levels to create for this group; optional, with a default value of 1
      * - gameboard::color_distribution: color distribution to use
      */
-    template<class T>
-    void add_category(std::string, T);
+    void add_category(std::string, category::group_properties);
 
     /*
      * Same as above, but for multiple groups within one category.
      */
-    template<class T, class... Groups>
-    void add_category(std::string, T, Groups...);
+    void add_category(std::string, std::vector<category::group_properties>);
 
     /*
      * Removes the category with the given name.
