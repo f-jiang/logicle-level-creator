@@ -12,6 +12,7 @@
 class level_pack : public json_serializable {
 private:
     struct category {
+        // TODO enable optional params for group_properties when adding categories
         struct group_properties {
             std::size_t height;
             std::size_t width;
