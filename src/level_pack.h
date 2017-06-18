@@ -1,37 +1,82 @@
-/*
- * classes:
- * Gameboard
- * - data for circles and squares
- * - dimensions
- * - area
- * - state
- * - shift
- * - reset
- * - colorPopulation
- * - print op
- * Level
- * - colors
- * - gameboard
- * - solutions
- * Solutions
- * - difficulty
- * - each solution as a sequence of moves
- * - lengths of solutions
- *
- * LevelPack
- * - num levels
- * - sort levels
- * - duplicate removal
- * - sections
- *
- */
 #ifndef LEVEL_PACK_H_
 #define LEVEL_PACK_H_
 
-class level_pack {
+#include <list>
+#include <vector>
+
+#include "json.hpp"
+#include "level.h"
+
+#include "json_serializable.h"
+
+class level_pack : public json_serializable {
+private:
+    struct category {
+        std::vector<level> levels;
+        std::size_t n_levels;
+        std::string name;
+    };
+
+    std::list<category> m_data;
+
+    std::list<category>::iterator find_category(std::string);
+
+    template<class T>
+    void add_category_base(std::list<category>::iterator, T);
+
+    template<class T, class... Groups>
+    void add_category_recursive(std::list<category>::iterator, T, Groups...);
 public:
-    level_pack();
-    ~level_pack();
+    /*
+     * Constructs an empty level pack.
+     */
+    level_pack() = default;
+
+    /**
+     * Adds a category to the level pack. Each category can be further organized into groups which contain
+     * any number of levels with matching properties.
+     *
+     * The "group" tuple format is as follows: { width, height, colors, [num_levels = 1], [color_distribution = uniform] }
+     * - std::size_t: width of the gameboard
+     * - std::size_t: height of the gameboard
+     * - vector<unsigned>: colors to use for the gameboard
+     * - std::size_t: number of levels to create for this group; optional, with a default value of 1
+     * - gameboard::color_distribution: color distribution to use
+     */
+    template<class T>
+    void add_category(std::string, T);
+
+    /*
+     * Same as above, but for multiple groups within one category.
+     */
+    template<class T, class... Groups>
+    void add_category(std::string, T, Groups...);
+
+    /*
+     * Removes the category with the given name.
+     */
+    void remove_category(std::string);
+
+    /*
+     * Updates the name of the category called |cur_name|, if it is present.
+     */
+    void rename_category(std::string, std::string);
+
+    /*
+     * Changes the position of the category called |name| within the list of all categories.
+     * This will affect their order when the level pack is written to a .json file.
+     */
+    void reorder_category(std::string, std::size_t);
+
+    /*
+     * Returns the internal list of categories. Use this if you wish to manually adjust the level pack's contents.
+     */
+    std::list<category>& data();
+
+    /*
+     * Returns a json object representing the level pack so that it can be written to a file.
+     */
+    nlohmann::json as_json() const;
 };
 
 #endif /* LEVEL_PACK_H_ */
