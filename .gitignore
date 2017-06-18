@@ -40,3 +40,6 @@ Debug/
 # cpp json lib
 src/json.hpp
 
+# Misc
+*.json
+
