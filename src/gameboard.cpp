@@ -54,6 +54,9 @@ gameboard::gameboard(std::size_t width,
     m_squares(height, width),
     m_init_circles(m_squares)
 {
+    /*
+     * Check if we can possibly have a gameboard with the specified properties
+     */
     if (m_area % 2 != 0 && m_n_colors == 2) {
         throw std::invalid_argument("2 colors and odd area will lead to square-circle color overlap");
     } else if (m_area < 2) {
@@ -63,7 +66,7 @@ gameboard::gameboard(std::size_t width,
     }
 
     /*
-     * determine the number of times each color is to be applied to a board grid
+     * Creates a histogram of squares and circles of each color
      */
     std::vector<unsigned> color_inventory;
     switch (m_cdist) {
@@ -105,6 +108,11 @@ gameboard::gameboard(std::size_t width,
             break;
     }
 
+    /*
+     * Populates the gameboard square and circles according to the histogram created
+     * above. The process will repeat if the gameboard is found to have an error such
+     * as overlapping circles and squares of the same color.
+     */
 populate:
     std::vector<unsigned> square_color_inventory = color_inventory;
     std::vector<unsigned> circle_color_inventory = color_inventory;
@@ -127,7 +135,7 @@ populate:
             circle_color_inventory[c]--;
             rem_squares--;
 
-            // need a loop?
+            // Check if the remaining colors will lead to an inevitable overlap
             for (std::size_t k = 0; k < m_n_colors; k++) {
                 if (circle_color_inventory[k] > rem_squares - square_color_inventory[k]) {
                     goto populate;
@@ -138,6 +146,10 @@ populate:
 
     reset();
 
+    /*
+     * Recreate the gameboard (using the same color distribution) if the current one is
+     * found to be unsolvable
+     */
     if (!is_solvable()) {
         goto populate;
     }
@@ -167,6 +179,8 @@ gameboard& gameboard::operator=(const gameboard& other) {
         m_init_circles = other.m_init_circles;
 
         m_cur_state = state::initial;
+
+        // The copy will be in the initial state by default
         m_cur_circles = other.m_init_circles;
     }
 
@@ -218,6 +232,14 @@ void gameboard::shift(shift_direction dir) {
     std::size_t len;
     bool transpose;
 
+    /*
+     * Shifts the gameboard's circles using a "trickling" process in which
+     * only unsolved circles have their positions swapped, and solved circles
+     * are left alone. The gameboard is first broken up into rows colinear with
+     * the shift direction. For each row, the unsolved circles' indices are determined,
+     * and finally their positions are exchanged.
+     */
+
     // no transpose
     if (dir == shift_direction::up || dir == shift_direction::down) {
         num = m_width;
@@ -230,11 +252,19 @@ void gameboard::shift(shift_direction dir) {
         transpose = true;
     }
 
+    /*
+     * Used to store the indices of the current row/column's unsolved circles
+     * found along the specified shift direction
+     */
     std::vector<std::size_t> unsolved;
     bool unsolved_has_dupes = true;
-    unsigned temp;  // used for holding the first circle during the "trickling phase",
-        // as well as for checking for unique unsolved current_circles
+    /*
+     * Used for holding the first circle during the "trickling phase",
+     * as well as for checking for unique unsolved current_circles
+     */
+    unsigned temp;
     for (std::size_t x = 0; x < num; x++) {
+        // Determining the unsolved circles' indices
         for (std::size_t y = 0; y < len; y++) {
             if (m_cur_circles.at(y, x, transpose)
                     != m_squares.at(y, x, transpose)) {
@@ -248,6 +278,11 @@ void gameboard::shift(shift_direction dir) {
             }
         }
 
+        /*
+         * Swap the unsolved circles according to the shift direction.
+         * Skip if the current row/column has only one unsolved circle,
+         * or if all the unsolved circles are of the same color
+         */
         if (!unsolved_has_dupes && unsolved.size() > 1) {
             std::size_t k;
 
@@ -279,28 +314,39 @@ void gameboard::reset() {
 }
 
 bool gameboard::is_solvable() {
+    /*
+     * Searches for a solution using breadth-first search, returning true
+     * if it has been found and false otherwise. Individual circle arrangements
+     * are analogous to nodes, and shifts correspond to edges. Because we begin
+     * with only the initial arrangement, it can be said that the graph is
+     * generated at runtime.
+     */
     bool solved = false;
     std::queue<std::vector<gameboard::shift_direction>> next;
     std::set<std::string> visited;
-    std::vector<gameboard::shift_direction> path;
+    std::vector<gameboard::shift_direction> paths;
     std::string mat;
     matrix<unsigned> temp;
 
     visited.insert(matrix_to_string(m_init_circles));
 
     do {
-        // if continuing from a previous path, we first need to move the gameboard
-        // into its state after that path
+        /*
+         * Create the circle arrangement that we have arrived at.
+         * Analogous to generating the current node.
+         */
         if (!next.empty()) {
-            path = next.front();
-            for (gameboard::shift_direction dir : path) {
+            paths = next.front();
+            for (gameboard::shift_direction dir : paths) {
                 shift(dir);
             }
             next.pop();
         }
 
+        // Stop if a solution has been found
         if (m_cur_circles == m_squares) {
             solved = true;
+        // Otherwise, decide which path to take next
         } else {
             temp = m_cur_circles;
             for (gameboard::shift_direction dir : directions) {
@@ -309,8 +355,8 @@ bool gameboard::is_solvable() {
                 mat = matrix_to_string(m_cur_circles);
 
                 if (visited.count(mat) == 0) {
-                    path.push_back(dir);
-                    next.push(path);
+                    paths.push_back(dir);
+                    next.push(paths);
                     visited.insert(mat);
                 }
             }
@@ -326,6 +372,11 @@ solution_set::solution_set(gameboard g) :
     m_difficulty(0),
     m_n_solns(0)
 {
+    /*
+     * Searches for all solutions using breadth-first search, storing them in
+     * |m_data| as they are found. A difficulty score is then calculated based on
+     * the number and length of the solutions.
+     */
     std::queue<std::vector<gameboard::shift_direction>> next;
     std::set<std::string> visited;
     std::vector<gameboard::shift_direction> path;
@@ -335,8 +386,10 @@ solution_set::solution_set(gameboard g) :
     visited.insert(matrix_to_string(g.m_init_circles));
 
     do {
-        // if continuing from a previous path, we first need to move the gameboard
-        // into its state after that path
+        /*
+         * Create the circle arrangement that we have arrived at.
+         * Analogous to generating the current node.
+         */
         if (!next.empty()) {
             path = next.front();
             for (gameboard::shift_direction dir : path) {
@@ -345,8 +398,10 @@ solution_set::solution_set(gameboard g) :
             next.pop();
         }
 
+        // Stop if a solution has been found
         if (g.m_cur_circles == g.m_squares) {
             m_data.push_back(path);
+        // Otherwise, decide which path to take next
         } else {
             temp = g.m_cur_circles;
             for (gameboard::shift_direction dir : directions) {
@@ -367,6 +422,7 @@ solution_set::solution_set(gameboard g) :
 
     m_n_solns = m_data.size();
 
+    // Difficulty calculation
     for (solution& sol : m_data) {
         m_difficulty += pow(0.1, sol.size() - 1);
     }

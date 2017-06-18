@@ -9,26 +9,49 @@
 template <class T>
 class matrix {
 public:
-
+    /*
+     * Constructs an empty matrix.
+     */
     matrix();
-    matrix(std::size_t, std::size_t);
-    matrix(std::size_t, std::size_t, const T&);
-    matrix(const matrix<T>&);   // TODO implicitly declared
 
+    /*
+     * Constructs a matrix with the specified height and width.
+     */
+    matrix(std::size_t, std::size_t);
+
+    /*
+     * Constructs and fills a matrix with the specified height and width.
+     */
+    matrix(std::size_t, std::size_t, const T&);
+
+
+    matrix(const matrix<T>&);   // TODO implicitly declared
     matrix<T>& operator=(const matrix<T>&); // TODO implicitly declared
+
+    /*
+     * Compares two objects of |matrix<T>|. Returns true if all elements match.
+     */
     bool operator==(const matrix<T>&) const;
 
+    /*
+     * Access the element at the specified row and column.
+     */
     T& at(std::size_t, std::size_t, bool = false);
     const T& at(std::size_t, std::size_t, bool = false) const;
 
+    /*
+     * Accessors for dimensions and area.
+     */
     const std::size_t n_rows() const;
     const std::size_t n_cols() const;
     const std::size_t area() const;
+
 private:
     std::size_t m_n_rows;
     std::size_t m_n_cols;
     std::size_t m_area;
     std::vector<T> m_data;
+
 };
 
 template<class T>
