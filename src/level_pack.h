@@ -9,6 +9,7 @@
 
 #include "json_serializable.h"
 
+// TODO check for and remove duplicates levels when creating a category
 class level_pack : public json_serializable {
 private:
     struct category {
@@ -52,6 +53,7 @@ public:
     /*
      * Same as above, but for multiple groups within one category.
      */
+    // TODO use something else to allow for multiple arguments, maybe parameter packs
     void add_category(std::string, std::vector<category::group_properties>);
 
     /*
