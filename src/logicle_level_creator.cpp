@@ -82,7 +82,19 @@ void test_level_pack() {
     std::ofstream fout("level_pack.json");
     level_pack levels;
 
-    levels.add_category("2x2 Boards", {2, 2, {rand_color(), rand_color(), rand_color()}, 1, gameboard::color_distribution::uniform});
+    // TODO fn call is ambiguous, possibly due to lack of struct constructor
+    levels.add_category("Hard Boards", {
+        {2, 2, {rand_color(), rand_color(), rand_color()}, 1, gameboard::color_distribution::uniform},
+        {4, 4, {rand_color(), rand_color(), rand_color()}, 100, gameboard::color_distribution::uniform}
+    });
+
+    levels.add_category("Easy Boards", {2, 2, {rand_color(), rand_color(), rand_color()}, 1, gameboard::color_distribution::uniform});
+    levels.rename_category("Hard Boards", "Difficult Boards");
+    levels.add_category("Trivial Boards", {1, 2, {0, 1}, 1, gameboard::color_distribution::uniform});
+
+    levels.reorder_category("Trivial Boards", 0);
+    levels.reorder_category("Easy Boards", 1);
+    levels.reorder_category("Difficult Boards", 2);
 
     fout << levels.as_json().dump(4);
     fout.close();
