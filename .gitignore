@@ -38,7 +38,7 @@ Debug/
 .project
 
 # cpp json lib
-src/json.hpp
+lib/json.hpp
 
 # Misc
 *.json

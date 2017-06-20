@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "json.hpp"
+#include "../lib/json.hpp"
 #include "json_serializable.h"
 #include "gameboard.h"
 

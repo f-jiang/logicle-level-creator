@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 
-#include "json.hpp"
+#include "../lib/json.hpp"
 #include "level.h"
 
 #include "json_serializable.h"

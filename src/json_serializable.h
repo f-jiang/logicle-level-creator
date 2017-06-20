@@ -1,7 +1,7 @@
 #ifndef JSON_SERIALIZABLE_H_
 #define JSON_SERIALIZABLE_H_
 
-#include "json.hpp"
+#include "../lib/json.hpp"
 
 class json_serializable {
 public:

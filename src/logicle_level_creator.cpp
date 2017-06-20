@@ -3,7 +3,7 @@
 #include <fstream>
 #include <random>
 #include "gameboard.h"
-#include "json.hpp"
+#include "../lib/json.hpp"
 #include "level.h"
 #include "level_pack.h"
 
