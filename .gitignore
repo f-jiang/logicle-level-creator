@@ -40,6 +40,9 @@ Debug/
 # cpp json lib
 lib/json.hpp
 
+# catch test lib
+lib/catch.hpp
+
 # Misc
 *.json
 
