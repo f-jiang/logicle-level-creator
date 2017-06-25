@@ -29,9 +29,15 @@ public:
     matrix<T>& operator=(const matrix<T>&); // TODO implicitly declared
 
     /*
-     * Compares two objects of |matrix<T>|. Returns true if all elements match.
+     * Compares two objects of |matrix<T>|. Returns true if dimensions and all elements match.
      */
     bool operator==(const matrix<T>&) const;
+
+    /*
+     * Compares two objects of |matrix<T>|. Returns true if dimensions, one or more elements,
+     * or both do not match.
+     */
+    bool operator!=(const matrix<T>&) const;
 
     /*
      * Access the element at the specified row and column.
@@ -100,7 +106,14 @@ matrix<T>& matrix<T>::operator=(const matrix<T>& other) {
 
 template<class T>
 bool matrix<T>::operator==(const matrix<T>& other) const {
-    return m_data == other.m_data;
+    return n_rows() == other.n_rows()
+        && n_cols() == other.n_cols()
+        && m_data == other.m_data;
+}
+
+template<class T>
+bool matrix<T>::operator!=(const matrix<T>& other) const {
+    return !(m_data == other.m_data);
 }
 
 template<class T>
