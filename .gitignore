@@ -43,6 +43,9 @@ lib/json.hpp
 # catch test lib
 lib/catch.hpp
 
+# test prog
+test
+
 # Misc
 *.json
 
