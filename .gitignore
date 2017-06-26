@@ -44,7 +44,7 @@ lib/json.hpp
 lib/catch.hpp
 
 # test prog
-test
+test/test
 
 # Misc
 *.json
