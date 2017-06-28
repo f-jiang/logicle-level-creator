@@ -62,21 +62,21 @@ TEST_CASE("matrix comparison", "[matrix]") {
         matrix<float> other(mat);
 
         REQUIRE(other == mat);
-        REQUIRE(!(other != mat));
+        REQUIRE_FALSE(other != mat);
     }
 
     SECTION("comparing matrices with the same dimensions but different elements") {
         matrix<float> other(3, 3, 4.321);
 
         REQUIRE(other != mat);
-        REQUIRE(!(other == mat));
+        REQUIRE_FALSE(other == mat);
     }
 
     SECTION("comparing matrices with different dimensions and different elements") {
         matrix<float> other(5, 3, 0.1);
 
         REQUIRE(other != mat);
-        REQUIRE(!(other == mat));
+        REQUIRE_FALSE(other == mat);
     }
 }
 
