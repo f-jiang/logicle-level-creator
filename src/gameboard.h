@@ -76,6 +76,12 @@ public:
     bool operator==(const gameboard&) const;
 
     /*
+     * Compares two gameboard objects, returning false if the gameboards differ in
+     * dimensions, number of colors, square configuration, and/or circle starting configuration.
+     */
+    bool operator!=(const gameboard&) const;
+
+    /*
      * Accessors
      */
     std::size_t width() const;

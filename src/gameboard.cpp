@@ -191,6 +191,10 @@ bool gameboard::operator==(const gameboard& other) const {
     return initial_circles() == other.initial_circles() && squares() == other.squares();
 }
 
+bool gameboard::operator!=(const gameboard& other) const {
+    return !(*this == other);
+}
+
 std::size_t gameboard::width() const {
     return m_width;
 }
