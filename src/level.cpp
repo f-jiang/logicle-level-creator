@@ -66,6 +66,14 @@ nlohmann::json level::as_json() const {
     return j;
 }
 
+bool level::operator==(const level& other) const {
+    return m_gameboard == other.m_gameboard;
+}
+
+bool level::operator!=(const level& other) const {
+    return !(m_gameboard == other.m_gameboard);
+}
+
 std::size_t level::gameboard_width() const {
     return m_gameboard.width();
 }

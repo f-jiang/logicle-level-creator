@@ -39,6 +39,16 @@ public:
     nlohmann::json as_json() const;
 
     /*
+     * Compares two level objects, returning true if both contain the same gameboard.
+     */
+    bool operator==(const level&) const;
+
+    /*
+     * Compares two level objects, returning false if the two contain different gameboards.
+     */
+    bool operator!=(const level&) const;
+
+    /*
      * Accessors for key level properties.
      */
     std::size_t gameboard_width() const;
