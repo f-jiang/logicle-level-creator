@@ -15,6 +15,12 @@ private:
     struct category {
         // TODO enable optional params for group_properties when adding categories
         struct group_properties {
+            group_properties(std::size_t,
+                             std::size_t,
+                             std::vector<unsigned>,
+                             std::size_t = 1,
+                             gameboard::color_distribution = gameboard::color_distribution::uniform);
+
             std::size_t height;
             std::size_t width;
             std::vector<unsigned> colors;

@@ -7,6 +7,18 @@
 #include <iterator>
 #include <tuple>
 
+level_pack::category::group_properties::group_properties(size_t h,
+        size_t w,
+        std::vector<unsigned> colors,
+        std::size_t n_lvls,
+        gameboard::color_distribution cdist) :
+    height(h),
+    width(w),
+    colors(colors),
+    n_levels(n_lvls),
+    color_dist(cdist)
+{ }
+
 std::list<level_pack::category>::iterator level_pack::find_category(std::string name) {
     return std::find_if(m_data.begin(), m_data.end(),
         [&name] (category& cat) { return cat.name == name; }
