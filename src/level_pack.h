@@ -9,7 +9,7 @@
 
 #include "json_serializable.h"
 
-// TODO check for and remove duplicates levels when creating a category
+// TODO throw except if number of boards requested is more than possible for given dimensions and num colors
 class level_pack : public json_serializable {
 private:
     struct category {
