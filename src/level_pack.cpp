@@ -15,13 +15,38 @@ std::list<level_pack::category>::iterator level_pack::find_category(std::string 
 
 void level_pack::add_group(level_pack::category& cat, level_pack::category::group_properties group) {
     std::size_t old_size = cat.levels.size();
+    std::size_t n_levels_to_add = group.n_levels;
+    std::vector<level>::iterator group_begin;
+    std::vector<level>::iterator erase_begin;
+    std::ostringstream a_str;
+    std::ostringstream b_str;
 
-    for (std::size_t i = 0; i < group.n_levels; i++) {
-        // TODO here and all other stl container insertions: construct in fn call, pass in ptr (i.e. new), move ctor, or init list?
-        cat.levels.push_back(level(group.width, group.height, group.colors, group.color_dist));
-    }
+    do {
+        for (std::size_t i = 0; i < n_levels_to_add; i++) {
+            // TODO here and all other stl container insertions: construct in fn call, pass in ptr (i.e. new), move ctor, or init list?
+            cat.levels.push_back(level(group.width, group.height, group.colors, group.color_dist));
+        }
 
-    std::sort(cat.levels.begin() + old_size - 1, cat.levels.end(),
+        group_begin = cat.levels.begin() + old_size;
+
+        std::sort(group_begin, cat.levels.end(),
+            [&a_str, &b_str] (const level& a, const level& b) {
+                a_str.str(std::string());
+                b_str.str(std::string());
+
+                a_str << a.m_gameboard;
+                b_str << b.m_gameboard;
+                return a_str.str() < b_str.str();
+            }
+        );
+
+        erase_begin = std::unique(group_begin, cat.levels.end());
+
+        n_levels_to_add = std::distance(erase_begin, cat.levels.end());
+        cat.levels.erase(erase_begin, cat.levels.end());
+    } while (n_levels_to_add != 0);
+
+    std::sort(group_begin, cat.levels.end(),
         [] (const level& a, const level& b) {
             return a.difficulty() < b.difficulty();
         }
