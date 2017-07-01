@@ -482,9 +482,9 @@ const solution_set::solution& solution_set::shortest_solution() const {
 std::ostream& operator<<(std::ostream& os, const gameboard& g) {
     for (std::size_t j = 0; j < g.height(); j++) {
         for (std::size_t i = 0; i < g.width(); i++) {
-            std::cout << g.squares().at(j, i) << '|' << g.current_circles().at(j, i) << ' ';
+            os << g.squares().at(j, i) << '|' << g.current_circles().at(j, i) << ' ';
         }
-        std::cout << std::endl << std::endl;
+        os << std::endl << std::endl;
     }
 
     return os;
@@ -494,22 +494,22 @@ std::ostream& operator<<(std::ostream& os, const solution_set::solution& s) {
     for (gameboard::shift_direction d : s) {
         switch (d) {
         case gameboard::shift_direction::up:
-            std::cout << "up ";
+            os << "up ";
             break;
         case gameboard::shift_direction::down:
-            std::cout << "down ";
+            os << "down ";
             break;
         case gameboard::shift_direction::left:
-            std::cout << "left ";
+            os << "left ";
             break;
         case gameboard::shift_direction::right:
-            std::cout << "right ";
+            os << "right ";
             break;
         default:
             break;
         }
     }
-    std::cout << std::endl;
+    os << std::endl;
 
     return os;
 }
