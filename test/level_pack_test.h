@@ -9,8 +9,6 @@
 #include <sstream>
 #include <vector>
 
-#include <iostream>
-
 bool is_category_valid(const level_pack::category& cat, std::string& name, level_pack::category::group_properties& group) {
     return cat.name == name
         && cat.levels.size() == group.n_levels
@@ -193,7 +191,7 @@ TEST_CASE("reordering level categories", "[level_pack][level]") {
         levels.add_category("test1", { 2, 2, { 1, 2 } });
         levels.add_category("test2", { 2, 2, { 1, 2 } });
         levels.add_category("test3", { 2, 2, { 1, 2 } });
-        REQUIRE_THROWS(levels.reorder_category("test1", 10));
+        REQUIRE_THROWS(levels.reorder_category("test1", 3));
     }
 }
 
