@@ -144,8 +144,8 @@ void level_pack::reorder_category(std::string name, std::size_t new_pos) {
         throw std::out_of_range(osstr.str());
     } else {    // found
         std::list<category>::iterator dest = m_data.begin();
-        std::advance(dest, new_pos);
-        std::swap(*it, *dest);  // TODO do the |level| objects within |category::data| need move ctors?
+        std::advance(dest, new_pos + 1);
+        m_data.splice(dest, m_data, it);  // TODO do the |level| objects within |category::data| need move ctors?
     }
 }
 
