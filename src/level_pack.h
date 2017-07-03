@@ -11,7 +11,7 @@
 
 // TODO throw except if number of boards requested is more than possible for given dimensions and num colors
 class level_pack : public json_serializable {
-private:
+public:
     struct category {
         // TODO enable optional params for group_properties when adding categories
         struct group_properties {
@@ -32,12 +32,6 @@ private:
         std::vector<level> levels;
     };
 
-    std::list<category> m_data;
-
-    std::list<category>::iterator find_category(std::string);
-    void add_group(category&, category::group_properties);
-
-public:
     /*
      * Constructs an empty level pack.
      */
@@ -79,14 +73,21 @@ public:
     void reorder_category(std::string, std::size_t);
 
     /*
-     * Returns the internal list of categories. Use this if you wish to manually adjust the level pack's contents.
+     * Returns the internal list of categories.
      */
-    std::list<category>& data();
+    const std::list<category>& data() const;
 
     /*
      * Returns a json object representing the level pack so that it can be written to a file.
      */
     nlohmann::json as_json() const;
+
+private:
+    std::list<category> m_data;
+
+    std::list<category>::iterator find_category(std::string);
+    void add_group(category&, category::group_properties);
+
 };
 
 #endif /* LEVEL_PACK_H_ */

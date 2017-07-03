@@ -149,7 +149,7 @@ void level_pack::reorder_category(std::string name, std::size_t new_pos) {
     }
 }
 
-std::list<level_pack::category>& level_pack::data() {
+const std::list<level_pack::category>& level_pack::data() const {
     return m_data;
 }
 
