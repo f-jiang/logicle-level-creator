@@ -33,9 +33,9 @@ public:
     };
 
     /*
-     * Constructs an empty level pack.
+     * Constructs a level pack with the given name.
      */
-    level_pack() = default;
+    level_pack(std::string);
 
     /**
      * Adds a category to the level pack. Each category can be further organized into groups which contain
@@ -82,8 +82,15 @@ public:
      */
     nlohmann::json as_json() const;
 
+    /*
+     * Accessor and mutator for the level pack's name.
+     */
+    const std::string& name() const;
+    void name(std::string);
+
 private:
     std::list<category> m_data;
+    std::string m_name;
 
     std::list<category>::iterator find_category(std::string);
     void add_group(category&, category::group_properties);

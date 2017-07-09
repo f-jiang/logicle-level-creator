@@ -64,8 +64,19 @@ bool do_categories_follow_order(const level_pack& levels, std::vector<std::strin
            );
 }
 
+TEST_CASE("level pack name is correct", "[level_pack][level]") {
+    level_pack first("");
+    level_pack second("test");
+
+    REQUIRE(first.name() == "");
+    REQUIRE(second.name() == "test");
+
+    first.name("name");
+    REQUIRE(first.name() == "name");
+}
+
 TEST_CASE("adding level categories", "[level_pack][level]") {
-    level_pack levels;
+    level_pack levels("test");
     std::list<level_pack::category>::const_iterator cat;
 
     SECTION("level category contents match parameters given") {
@@ -107,7 +118,7 @@ TEST_CASE("adding level categories", "[level_pack][level]") {
 }
 
 TEST_CASE("removing level categories", "[level_pack][level]") {
-    level_pack levels;
+    level_pack levels("test");
 
     SECTION("level pack is successfully removed") {
         levels.add_category("test", { 2, 2, { 1, 2 } });
@@ -136,7 +147,7 @@ TEST_CASE("removing level categories", "[level_pack][level]") {
 }
 
 TEST_CASE("renaming level categories", "[level_pack][level]") {
-    level_pack levels;
+    level_pack levels("test");
     levels.add_category("test", { 2, 2, { 1, 2 } });
 
     SECTION("category is successfully renamed") {
@@ -165,7 +176,7 @@ TEST_CASE("renaming level categories", "[level_pack][level]") {
 }
 
 TEST_CASE("reordering level categories", "[level_pack][level]") {
-    level_pack levels;
+    level_pack levels("test");
 
     SECTION("category is reordered successfully") {
         levels.add_category("test1", { 2, 2, { 1, 2 } });

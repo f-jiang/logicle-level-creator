@@ -19,6 +19,10 @@ level_pack::category::group_properties::group_properties(size_t h,
     color_dist(cdist)
 { }
 
+level_pack::level_pack(std::string name) :
+        m_name(name)
+{ }
+
 std::list<level_pack::category>::iterator level_pack::find_category(std::string name) {
     return std::find_if(m_data.begin(), m_data.end(),
         [&name] (category& cat) { return cat.name == name; }
@@ -169,4 +173,12 @@ nlohmann::json level_pack::as_json() const {
     }
 
     return j;
+}
+
+const std::string& level_pack::name() const {
+    return m_name;
+}
+
+void level_pack::name(std::string name) {
+    m_name = name;
 }
