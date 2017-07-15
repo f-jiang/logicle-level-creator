@@ -24,11 +24,12 @@ static void usage() {
 static void parse_options(int argc, char* argv[]) {
     int c;
 
-    while ((c = getopt(argc, argv, "vhi")) != -1) {
+    while ((c = getopt(argc, argv, "vhi:")) != -1) {
         switch (c) {
         case 'v':
             break;
         case 'i':
+            indent = std::atoi(optarg);
             break;
         case 'h':
             usage();
@@ -118,7 +119,7 @@ int main(int argc, char* argv[]) {
                 levels.add_category(cat.at("name"), groups);
             }
 
-            fout << levels.as_json().dump(4);
+            fout << levels.as_json().dump(indent);
         } catch (const std::exception& e) {
             display_mesg(std::string(e.what()), false);
         }
