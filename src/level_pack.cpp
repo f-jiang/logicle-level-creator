@@ -79,7 +79,7 @@ void level_pack::add_group(level_pack::category& cat, level_pack::category::grou
 void level_pack::add_category(std::string name, level_pack::category::group_properties group) {
     if (find_category(name) != m_data.end()) {
         std::ostringstream osstr;
-        osstr << "there already exists a category with name ";
+        osstr << "level_pack: there already exists a category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
     } else {
@@ -91,7 +91,7 @@ void level_pack::add_category(std::string name, level_pack::category::group_prop
 void level_pack::add_category(std::string name, std::vector<level_pack::category::group_properties> groups) {
     if (find_category(name) != m_data.end()) {
         std::ostringstream osstr;
-        osstr << "there already exists a category with name ";
+        osstr << "level_pack: there already exists a category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
     } else {
@@ -108,9 +108,9 @@ void level_pack::remove_category(std::string name) {
     std::ostringstream osstr;
 
     if (m_data.size() == 0) {
-        throw std::invalid_argument("nothing to remove from empty level_pack");
+        throw std::invalid_argument("level_pack: nothing to remove from empty level_pack");
     } else if (it == m_data.end()) {    // if no category with |name| was found
-        osstr << "couldn't find a level category with name ";
+        osstr << "level_pack: couldn't find a level category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
     } else {    // found
@@ -123,13 +123,13 @@ void level_pack::rename_category(std::string cur_name, std::string new_name) {
     std::ostringstream osstr;
 
     if (m_data.size() == 0) {
-        throw std::invalid_argument("nothing to rename in empty level_pack");
+        throw std::invalid_argument("level_pack: nothing to rename in empty level_pack");
     } else if (it == m_data.end()) {    // if no category with |cur_name| was found
-        osstr << "couldn't find a level category with name ";
+        osstr << "level_pack: couldn't find a level category with name ";
         osstr << cur_name;
         throw std::invalid_argument(osstr.str());
     } else if (find_category(new_name) != m_data.end()) {   // there already exists a category called |new_name|
-        osstr << "there already exists a category with name ";
+        osstr << "level_pack: there already exists a category with name ";
         osstr << new_name;
         throw std::invalid_argument(osstr.str());
     } else {    // found
@@ -142,13 +142,13 @@ void level_pack::reorder_category(std::string name, std::size_t new_pos) {
     std::ostringstream osstr;
 
     if (m_data.size() == 0) {
-        throw std::invalid_argument("nothing to reorder in empty level_pack");
+        throw std::invalid_argument("level_pack: nothing to reorder in empty level_pack");
     } else if (it == m_data.end()) {    // if no category with |name| was found
-        osstr << "couldn't find a level category with name ";
+        osstr << "level_pack: couldn't find a level category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
     } else if (new_pos >= m_data.size()) {
-        osstr << "level category ";
+        osstr << "level_pack: level category ";
         osstr << name;
         osstr << " couldn't be relocated to out-of-bounds index ";
         osstr << new_pos;

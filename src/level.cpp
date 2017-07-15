@@ -24,7 +24,7 @@ level::level(const gameboard& gameboard,
         std::vector<unsigned> colors)
 {
     if (colors.size() < gameboard.n_colors()) {
-        throw std::invalid_argument("not enough colors provided for gameboard");
+        throw std::invalid_argument("level: not enough colors provided for gameboard");
     }
 
     m_gameboard = gameboard;
@@ -36,7 +36,7 @@ level::level(const gameboard& gameboard,
         std::vector<unsigned> colors)
 {
     if (colors.size() < gameboard.n_colors()) {
-        throw std::invalid_argument("not enough colors provided for gameboard");
+        throw std::invalid_argument("level: not enough colors provided for gameboard");
     }
 
     m_gameboard = gameboard;

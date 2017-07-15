@@ -58,11 +58,11 @@ gameboard::gameboard(std::size_t width,
      * Check if we can possibly have a gameboard with the specified properties
      */
     if (m_area % 2 != 0 && m_n_colors == 2) {
-        throw std::invalid_argument("2 colors and odd area will lead to square-circle color overlap");
+        throw std::invalid_argument("gameboard: 2 colors and odd area will lead to square-circle color overlap");
     } else if (m_area < 2) {
-        throw std::invalid_argument("need area of at least 2");
+        throw std::invalid_argument("gameboard: need area of at least 2");
     } else if (m_n_colors < 2) {
-        throw std::invalid_argument("need at least 2 colors");
+        throw std::invalid_argument("gameboard: need at least 2 colors");
     }
 
     /*

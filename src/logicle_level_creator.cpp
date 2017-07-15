@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 #include <cstdlib>
 #include <getopt.h>
 
@@ -50,11 +51,24 @@ level_pack::category::group_properties parse_group(const nlohmann::json& j) {
     level_pack::category::group_properties group;
 
     // TODO eventually use a helper fn (that throws) for searching multiple names at a time
-    group.height = j.at("gameboard-height");
-    group.width = j.at("gameboard-width");
+    try {
+        group.height = j.at("gameboard-height");
+    } catch (const std::domain_error& e) {
+        throw std::domain_error("gameboard height: " + std::string(e.what()));
+    }
 
-    for (const std::string& color : j.at("colors")) {
-        group.colors.push_back(std::stoul(color, nullptr, 16));
+    try {
+        group.width = j.at("gameboard-width");
+    } catch (const std::domain_error& e) {
+        throw std::domain_error("gameboard width: " + std::string(e.what()));
+    }
+
+    try {
+        for (const std::string& color : j.at("colors")) {
+            group.colors.push_back(std::stoul(color, nullptr, 16));
+        }
+    } catch (const std::domain_error& e) {
+        throw std::domain_error("colors: " + std::string(e.what()));
     }
 
     try {
@@ -64,25 +78,25 @@ level_pack::category::group_properties parse_group(const nlohmann::json& j) {
         } else if (color_dist == "random") {
             group.color_dist = gameboard::color_distribution::random;
         } else {
-            throw std::invalid_argument("invalid color distribution '" + color_dist + "'");
+            throw std::invalid_argument("color distribution: invalid value '" + color_dist + "'");
         }
     // the colour distribution value is not a string as it ought to be
     } catch (const std::domain_error& e) {
-        throw;
+        throw std::domain_error("color distribution: " + std::string(e.what()));
     // the colour distribution value is a string but does not name a valid colour distribution type
     } catch (const std::invalid_argument& e) {
         throw;
     } catch (...) {
-        display_mesg("no color distribution specified; using default value instead", true);
+        display_mesg("color distribution: no value specified; using default instead", true);
     }
 
     try {
         group.n_levels = j.at("num-levels");
     // the level count is not an int as it ought to be
     } catch (const std::domain_error& e) {
-        throw;
+        throw std::domain_error("level count: " + std::string(e.what()));
     } catch (...) {
-        display_mesg("no level count specified for group; assuming one level", true);
+        display_mesg("level count: no value specified; using '1' instead", true);
     }
 
     return group;
@@ -107,7 +121,6 @@ int main(int argc, char* argv[]) {
 
             std::string name = params.value("name", "");
             level_pack levels(name);
-            fout.open(name + ".json");
 
             for (const nlohmann::json& cat : params.at("categories")) {
                 std::vector<level_pack::category::group_properties> groups;
@@ -119,6 +132,7 @@ int main(int argc, char* argv[]) {
                 levels.add_category(cat.at("name"), groups);
             }
 
+            fout.open(name + ".json");
             fout << levels.as_json().dump(indent);
         } catch (const std::exception& e) {
             display_mesg(std::string(e.what()), false);
