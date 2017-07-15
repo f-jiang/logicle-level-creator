@@ -18,7 +18,7 @@ static void display_mesg(std::string mesg, bool verbose) {
 }
 
 static void usage() {
-    display_mesg(": usage: " + PROGRAM_NAME + " [-h] [-v] [-i indent-level] PARAM_FILES...", false);
+    display_mesg("usage: " + PROGRAM_NAME + " [-h] [-v] [-i indent-level] PARAM_FILES...", false);
 }
 
 static void parse_options(int argc, char* argv[]) {
