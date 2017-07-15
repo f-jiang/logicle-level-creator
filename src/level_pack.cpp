@@ -46,7 +46,7 @@ void level_pack::add_group(level_pack::category& cat, level_pack::category::grou
 
     do {
         for (std::size_t i = 0; i < n_levels_to_add; i++) {
-            // TODO here and all other stl container insertions: construct in fn call, pass in ptr (i.e. new), move ctor, or init list?
+            // TODO emplace
             cat.levels.push_back(level(group.width, group.height, group.colors, group.color_dist));
         }
 
