@@ -11,6 +11,14 @@ level::level(std::size_t height,
     m_solns(m_gameboard)
 { }
 
+level::level(std::size_t height,
+        std::size_t width,
+        std::vector<unsigned> colors) :
+    m_gameboard(height, width, colors.size()),
+    m_colors(colors),
+    m_solns(m_gameboard)
+{ }
+
 level::level(const gameboard& gameboard,
         const solution_set& solutions,
         std::vector<unsigned> colors)

@@ -15,11 +15,16 @@ public:
     struct category {
         // TODO enable optional params for group_properties when adding categories
         struct group_properties {
+            static const std::size_t DEFAULT_N_LEVELS = 1;
+
+            // TODO ok, should we have a default ctor simply to enable code to be written a certain way?
+            group_properties();
+
             group_properties(std::size_t,
                              std::size_t,
                              std::vector<unsigned>,
-                             std::size_t = 1,
-                             gameboard::color_distribution = gameboard::color_distribution::uniform);
+                             std::size_t = DEFAULT_N_LEVELS,
+                             gameboard::color_distribution = gameboard::DEFAULT_COLOR_DISTRIBUTION);
 
             std::size_t height;
             std::size_t width;

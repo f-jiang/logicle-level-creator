@@ -52,6 +52,8 @@ public:
 //      non_repeating
     };
 
+    static const color_distribution DEFAULT_COLOR_DISTRIBUTION = color_distribution::uniform;
+
     /*
      * Constructs an empty gameboard. The gameboard is guaranteed to have a solution.
      */
@@ -64,7 +66,7 @@ public:
      * given set of properties is impossible. The gameboard is guaranteed to have a solution.
      */
     // TODO reverse order of first two params, width and height, to height and width
-    gameboard(std::size_t, std::size_t, std::size_t, color_distribution = color_distribution::uniform);
+    gameboard(std::size_t, std::size_t, std::size_t, color_distribution = DEFAULT_COLOR_DISTRIBUTION);
 
     gameboard(const gameboard&);
     gameboard& operator=(const gameboard&);

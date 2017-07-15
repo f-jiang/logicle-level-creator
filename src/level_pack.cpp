@@ -7,6 +7,13 @@
 #include <iterator>
 #include <tuple>
 
+level_pack::category::group_properties::group_properties() :
+    height(0),
+    width(0),
+    n_levels(level_pack::category::group_properties::DEFAULT_N_LEVELS),
+    color_dist(gameboard::DEFAULT_COLOR_DISTRIBUTION)
+{ }
+
 level_pack::category::group_properties::group_properties(size_t h,
         size_t w,
         std::vector<unsigned> colors,

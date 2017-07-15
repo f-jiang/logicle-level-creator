@@ -20,7 +20,15 @@ public:
     level(std::size_t,
           std::size_t,
           std::vector<unsigned>,
-          gameboard::color_distribution = gameboard::color_distribution::uniform);
+          gameboard::color_distribution);
+
+    /*
+     * Constructs a level, generating a new gameboard with the specified properties,
+     * then finding and storing its solutions.
+     */
+    level(std::size_t,
+          std::size_t,
+          std::vector<unsigned>);
 
     /*
      * Constructs a level from a pre-existing gameboard and set of solutions,
