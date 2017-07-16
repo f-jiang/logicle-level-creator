@@ -47,24 +47,37 @@ static bool does_file_exist(std::string path) {
     return file.good();
 }
 
+nlohmann::json::const_reference json_at(const nlohmann::json& j, std::string key) {
+    return j.at(key);
+}
+
+template<typename... Args>
+nlohmann::json::const_reference json_at(const nlohmann::json& j, std::string key, Args... args) {
+    try {
+        return j.at(key);
+    } catch (...)  {
+        return json_at(j, args...);
+    }
+}
+
+
 level_pack::category::group_properties parse_group(const nlohmann::json& j) {
     level_pack::category::group_properties group;
 
-    // TODO eventually use a helper fn (that throws) for searching multiple names at a time
     try {
-        group.height = j.at("gameboard-height");
+        group.height = json_at(j, "gameboard-height", "height");
     } catch (const std::domain_error& e) {
         throw std::domain_error("gameboard height: " + std::string(e.what()));
     }
 
     try {
-        group.width = j.at("gameboard-width");
+        group.width = json_at(j, "gameboard-width", "width");
     } catch (const std::domain_error& e) {
         throw std::domain_error("gameboard width: " + std::string(e.what()));
     }
 
     try {
-        for (const std::string& color : j.at("colors")) {
+        for (const std::string& color : json_at(j, "colors", "colours")) {
             group.colors.push_back(std::stoul(color, nullptr, 16));
         }
     } catch (const std::domain_error& e) {
@@ -72,7 +85,7 @@ level_pack::category::group_properties parse_group(const nlohmann::json& j) {
     }
 
     try {
-        std::string color_dist = j.at("color-dist");
+        std::string color_dist = json_at(j, "color-dist", "colour-dist", "color-distribution", "colour-distribution", "cdist");
         if (color_dist == "uniform") {
             group.color_dist = gameboard::color_distribution::uniform;
         } else if (color_dist == "random") {
@@ -91,7 +104,7 @@ level_pack::category::group_properties parse_group(const nlohmann::json& j) {
     }
 
     try {
-        group.n_levels = j.at("num-levels");
+        group.n_levels = json_at(j, "num-levels", "n-levels", "level-count");
     // the level count is not an int as it ought to be
     } catch (const std::domain_error& e) {
         throw std::domain_error("level count: " + std::string(e.what()));
