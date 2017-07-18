@@ -81,9 +81,9 @@ TEST_CASE("gameboard can be copied", "[gameboard]") {
 
 TEST_CASE("exceptions are thrown when attempting to construct gameboard with "
         "inappropriate parameters", "[gameboard]") {
-    REQUIRE_THROWS_WITH(gameboard(3, 3, 2), "2 colors and odd area will lead to square-circle color overlap");
-    REQUIRE_THROWS_WITH(gameboard(1, 1, 3), "need area of at least 2");
-    REQUIRE_THROWS_WITH(gameboard(9, 9, 1), "need at least 2 colors");
+    REQUIRE_THROWS(gameboard(3, 3, 2));
+    REQUIRE_THROWS(gameboard(1, 1, 3));
+    REQUIRE_THROWS(gameboard(9, 9, 1));
 }
 
 TEST_CASE("gameboard can be shifted and reset", "[gameboard]") {
