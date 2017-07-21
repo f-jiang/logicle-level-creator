@@ -13,7 +13,6 @@
 class level_pack : public json_serializable {
 public:
     struct category {
-        // TODO enable optional params for group_properties when adding categories
         struct group_properties {
             static const std::size_t DEFAULT_N_LEVELS = 1;
 
