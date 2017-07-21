@@ -48,7 +48,7 @@ gameboard::gameboard(std::size_t height,
     m_height(height),
     m_width(width),
     m_area(height * width),
-    m_n_colors(n_colors > m_area ? m_area : n_colors),
+    m_n_colors(n_colors),
     m_cur_state(state::initial),
     m_cdist(cdist),
     m_squares(height, width),
@@ -63,6 +63,8 @@ gameboard::gameboard(std::size_t height,
         throw std::invalid_argument("gameboard: need area of at least 2");
     } else if (m_n_colors < 2) {
         throw std::invalid_argument("gameboard: need at least 2 colors");
+    } else if (m_n_colors > m_area) {
+        throw std::invalid_argument("gameboard: more colors than cells");
     }
 
     /*
