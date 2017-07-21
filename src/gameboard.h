@@ -65,7 +65,6 @@ public:
      * Constructs a gameboard with the specified properties. Throws an exception if the
      * given set of properties is impossible. The gameboard is guaranteed to have a solution.
      */
-    // TODO reverse order of first two params, width and height, to height and width
     gameboard(std::size_t, std::size_t, std::size_t, color_distribution = DEFAULT_COLOR_DISTRIBUTION);
 
     gameboard(const gameboard&);
@@ -86,8 +85,8 @@ public:
     /*
      * Accessors
      */
-    std::size_t width() const;
     std::size_t height() const;
+    std::size_t width() const;
     std::size_t area() const;
     std::size_t n_colors() const;
     state current_state() const;
@@ -111,8 +110,8 @@ public:
     void reset();
 
 private:
-    std::size_t m_width;
     std::size_t m_height;
+    std::size_t m_width;
     std::size_t m_area;
     std::size_t m_n_colors;
     state m_cur_state;

@@ -51,8 +51,8 @@ nlohmann::json level::as_json() const {
     );
     std::vector<std::vector<unsigned>> squares_json = circles_json;
 
-    for (std::size_t j = 0; j < m_gameboard.width(); j++) {
-        for (std::size_t i = 0; i < m_gameboard.height(); i++) {
+    for (std::size_t i = 0; i < m_gameboard.height(); i++) {
+        for (std::size_t j = 0; j < m_gameboard.width(); j++) {
             circles_json[j][i] = m_gameboard.initial_circles().at(i, j);
             squares_json[j][i] = m_gameboard.squares().at(i, j);
         }
@@ -60,8 +60,8 @@ nlohmann::json level::as_json() const {
 
     nlohmann::json j = {
         { "area", m_gameboard.area() },
-        { "widthSquares", m_gameboard.width() },
         { "heightSquares", m_gameboard.height() },
+        { "widthSquares", m_gameboard.width() },
         { "difficulty", m_solns.difficulty() },
         { "longestSolution", m_solns.longest_solution().size() },
         { "shortestSolution", m_solns.shortest_solution().size() },
@@ -82,12 +82,12 @@ bool level::operator!=(const level& other) const {
     return !(m_gameboard == other.m_gameboard);
 }
 
-std::size_t level::gameboard_width() const {
-    return m_gameboard.width();
-}
-
 std::size_t level::gameboard_height() const {
     return m_gameboard.height();
+}
+
+std::size_t level::gameboard_width() const {
+    return m_gameboard.width();
 }
 
 float level::difficulty() const {

@@ -87,7 +87,7 @@ TEST_CASE("exceptions are thrown when attempting to construct gameboard with "
 }
 
 TEST_CASE("gameboard can be shifted and reset", "[gameboard]") {
-    gameboard gb(3, 1, 3);
+    gameboard gb(1, 3, 3);
 
     gb.shift(gameboard::shift_direction::left);
     REQUIRE(gb.current_circles() != gb.initial_circles());

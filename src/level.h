@@ -60,8 +60,8 @@ public:
     /*
      * Accessors for key level properties.
      */
-    std::size_t gameboard_width() const;
     std::size_t gameboard_height() const;
+    std::size_t gameboard_width() const;
     float difficulty() const;
     std::size_t n_colors() const;
     std::size_t n_solutions() const;

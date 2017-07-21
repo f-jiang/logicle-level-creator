@@ -47,7 +47,7 @@ void level_pack::add_group(level_pack::category& cat, level_pack::category::grou
     do {
         for (std::size_t i = 0; i < n_levels_to_add; i++) {
             // TODO emplace
-            cat.levels.push_back(level(group.width, group.height, group.colors, group.color_dist));
+            cat.levels.push_back(level(group.height, group.width, group.colors, group.color_dist));
         }
 
         group_begin = cat.levels.begin() + old_size;

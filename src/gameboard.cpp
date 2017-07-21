@@ -41,13 +41,13 @@ static std::string matrix_to_string(const matrix<unsigned>& mat) {
     return osstr.str();
 }
 
-gameboard::gameboard(std::size_t width,
-        std::size_t height,
+gameboard::gameboard(std::size_t height,
+        std::size_t width,
         std::size_t n_colors,
         color_distribution cdist) :
-    m_width(width),
     m_height(height),
-    m_area(width * height),
+    m_width(width),
+    m_area(height * width),
     m_n_colors(n_colors > m_area ? m_area : n_colors),
     m_cur_state(state::initial),
     m_cdist(cdist),
@@ -118,8 +118,8 @@ populate:
     std::vector<unsigned> circle_color_inventory = color_inventory;
     std::size_t rem_squares = m_area;
     std::size_t s, c;
-    for (std::size_t x = 0; x < m_width; x++) {
-        for (std::size_t y = 0; y < m_height; y++) {
+    for (std::size_t y = 0; y < m_height; y++) {
+        for (std::size_t x = 0; x < m_width; x++) {
             do {
                 s = rand_int(0, m_n_colors - 1);
             } while (square_color_inventory[s] == 0);
@@ -156,8 +156,8 @@ populate:
 }
 
 gameboard::gameboard(const gameboard& other) :
-    m_width(other.m_width),
     m_height(other.m_height),
+    m_width(other.m_width),
     m_area(other.m_area),
     m_n_colors(other.m_n_colors),
     m_cur_state(state::initial),
@@ -170,8 +170,8 @@ gameboard::gameboard(const gameboard& other) :
 
 gameboard& gameboard::operator=(const gameboard& other) {
     if (&other != this) {
-        m_width = other.m_width;
         m_height= other.m_height;
+        m_width = other.m_width;
         m_area = other.m_area;
         m_n_colors = other.m_n_colors;
         m_cdist = other.m_cdist;
@@ -195,12 +195,12 @@ bool gameboard::operator!=(const gameboard& other) const {
     return !(*this == other);
 }
 
-std::size_t gameboard::width() const {
-    return m_width;
-}
-
 std::size_t gameboard::height() const {
     return m_height;
+}
+
+std::size_t gameboard::width() const {
+    return m_width;
 }
 
 std::size_t gameboard::area() const {
