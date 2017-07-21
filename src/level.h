@@ -10,7 +10,6 @@
 class level : public json_serializable {
 friend class level_pack;
 public:
-    // TODO initializer_list, or param pack instead of vector?
     /*
      * Constructs a level, generating a new gameboard with the specified properties,
      * then finding and storing its solutions.

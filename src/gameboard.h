@@ -13,7 +13,6 @@
 // TODO non-repeating color dist
 // TODO save memory using reference params where possible
 // TODO remove matrix_to_string() if it isn't needed
-// TODO when too many or too few colors, throw exception or ignore?
 class gameboard {
 friend class solution_set;
 public:

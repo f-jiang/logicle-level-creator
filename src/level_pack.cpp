@@ -166,7 +166,7 @@ void level_pack::reorder_category(std::string name, std::size_t new_pos) {
 
     std::list<category>::iterator dest = m_data.begin();
     std::advance(dest, new_pos + 1);
-    m_data.splice(dest, m_data, it);  // TODO do the |level| objects within |category::data| need move ctors?
+    m_data.splice(dest, m_data, it);
 }
 
 const std::list<level_pack::category>& level_pack::data() const {
