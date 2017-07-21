@@ -24,10 +24,6 @@ public:
      */
     matrix(std::size_t, std::size_t, const T&);
 
-
-    matrix(const matrix<T>&);   // TODO implicitly declared
-    matrix<T>& operator=(const matrix<T>&); // TODO implicitly declared
-
     /*
      * Compares two objects of |matrix<T>|. Returns true if dimensions and all elements match.
      */
@@ -83,26 +79,6 @@ matrix<T>::matrix(std::size_t n_rows, std::size_t n_cols, const T& val) :
     m_area(n_rows * n_cols),
     m_data(m_area, val)
 { }
-
-template<class T>
-matrix<T>::matrix(const matrix<T>& other) :
-    m_n_rows(other.m_n_rows),
-    m_n_cols(other.m_n_cols),
-    m_area(other.m_area),
-    m_data(other.m_data)
-{ }
-
-template<class T>
-matrix<T>& matrix<T>::operator=(const matrix<T>& other) {
-    if (&other != this) {
-        m_n_rows = other.m_n_rows;
-        m_n_cols = other.m_n_cols;
-        m_area = other.m_area;
-        m_data = other.m_data;
-    }
-
-    return *this;
-}
 
 template<class T>
 bool matrix<T>::operator==(const matrix<T>& other) const {
