@@ -81,10 +81,10 @@ void level_pack::add_category(std::string name, level_pack::category::group_prop
         osstr << "level_pack: there already exists a category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
-    } else {
-        std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
-        add_group(*cat, group);
     }
+
+    std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+    add_group(*cat, group);
 }
 
 void level_pack::add_category(std::string name, std::vector<level_pack::category::group_properties> groups) {
@@ -93,12 +93,12 @@ void level_pack::add_category(std::string name, std::vector<level_pack::category
         osstr << "level_pack: there already exists a category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
-    } else {
-        std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+    }
 
-        for (category::group_properties& g : groups) {
-            add_group(*cat, g);
-        }
+    std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+
+    for (category::group_properties& g : groups) {
+        add_group(*cat, g);
     }
 }
 
@@ -108,13 +108,15 @@ void level_pack::remove_category(std::string name) {
 
     if (m_data.size() == 0) {
         throw std::invalid_argument("level_pack: nothing to remove from empty level_pack");
-    } else if (it == m_data.end()) {    // if no category with |name| was found
+    }
+
+    if (it == m_data.end()) {    // if no category with |name| was found
         osstr << "level_pack: couldn't find a level category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
-    } else {    // found
-        m_data.erase(it);
     }
+
+    m_data.erase(it);
 }
 
 void level_pack::rename_category(std::string cur_name, std::string new_name) {
@@ -123,17 +125,21 @@ void level_pack::rename_category(std::string cur_name, std::string new_name) {
 
     if (m_data.size() == 0) {
         throw std::invalid_argument("level_pack: nothing to rename in empty level_pack");
-    } else if (it == m_data.end()) {    // if no category with |cur_name| was found
+    }
+
+    if (it == m_data.end()) {    // if no category with |cur_name| was found
         osstr << "level_pack: couldn't find a level category with name ";
         osstr << cur_name;
         throw std::invalid_argument(osstr.str());
-    } else if (find_category(new_name) != m_data.end()) {   // there already exists a category called |new_name|
+    }
+
+    if (find_category(new_name) != m_data.end()) {   // there already exists a category called |new_name|
         osstr << "level_pack: there already exists a category with name ";
         osstr << new_name;
         throw std::invalid_argument(osstr.str());
-    } else {    // found
-        it->name = new_name;
     }
+
+    it->name = new_name;
 }
 
 void level_pack::reorder_category(std::string name, std::size_t new_pos) {
@@ -142,21 +148,25 @@ void level_pack::reorder_category(std::string name, std::size_t new_pos) {
 
     if (m_data.size() == 0) {
         throw std::invalid_argument("level_pack: nothing to reorder in empty level_pack");
-    } else if (it == m_data.end()) {    // if no category with |name| was found
+    }
+
+    if (it == m_data.end()) {    // if no category with |name| was found
         osstr << "level_pack: couldn't find a level category with name ";
         osstr << name;
         throw std::invalid_argument(osstr.str());
-    } else if (new_pos >= m_data.size()) {
+    }
+
+    if (new_pos >= m_data.size()) {
         osstr << "level_pack: level category ";
         osstr << name;
         osstr << " couldn't be relocated to out-of-bounds index ";
         osstr << new_pos;
         throw std::out_of_range(osstr.str());
-    } else {    // found
-        std::list<category>::iterator dest = m_data.begin();
-        std::advance(dest, new_pos + 1);
-        m_data.splice(dest, m_data, it);  // TODO do the |level| objects within |category::data| need move ctors?
     }
+
+    std::list<category>::iterator dest = m_data.begin();
+    std::advance(dest, new_pos + 1);
+    m_data.splice(dest, m_data, it);  // TODO do the |level| objects within |category::data| need move ctors?
 }
 
 const std::list<level_pack::category>& level_pack::data() const {
