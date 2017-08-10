@@ -121,9 +121,11 @@ int main(int argc, char* argv[]) {
 
     for ( ; optind < argc; optind++) {
         if (!does_file_exist(argv[optind])) {
-            display_mesg("no file found at " + std::string(argv[optind]), false);
+            display_mesg("no parameter file found at '" + std::string(argv[optind]) + "'", false);
             continue;
         }
+
+        display_mesg("creating level pack from parameter file '" + std::string(argv[optind]) + "'", false);
 
         std::ifstream fin(argv[optind]);
         std::ofstream fout;
@@ -148,7 +150,8 @@ int main(int argc, char* argv[]) {
             fout.open(name + ".json");
             fout << levels.as_json().dump(indent);
         } catch (const std::exception& e) {
-            display_mesg(std::string(e.what()), false);
+            display_mesg(std::string(e.what()), true);
+            display_mesg("failed to create level pack from parameter file '" + std::string(argv[optind]) + "'", false);
         }
 
         fin.close();
