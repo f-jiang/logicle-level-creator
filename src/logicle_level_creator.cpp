@@ -13,9 +13,12 @@
 static std::string PROGRAM_NAME;
 
 static int indent = 4;
+static bool print_verbose_output = false;
 
 static void display_mesg(std::string mesg, bool verbose) {
-    std::cout << PROGRAM_NAME << ": " << mesg << std::endl;
+    if (!verbose || (verbose && print_verbose_output)) {
+        std::cout << PROGRAM_NAME << ": " << mesg << std::endl;
+    }
 }
 
 static void usage() {
@@ -28,6 +31,7 @@ static void parse_options(int argc, char* argv[]) {
     while ((c = getopt(argc, argv, "vhi:")) != -1) {
         switch (c) {
         case 'v':
+            print_verbose_output = true;
             break;
         case 'i':
             indent = std::atoi(optarg);
