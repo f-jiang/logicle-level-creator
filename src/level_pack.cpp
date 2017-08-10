@@ -68,7 +68,30 @@ void level_pack::add_group(level_pack::category& cat, level_pack::category::grou
         cat.levels.erase(erase_begin, cat.levels.end());
     } while (n_levels_to_add != 0);
 
+    // TODO don't repeat lambda
     std::sort(group_begin, cat.levels.end(),
+        [] (const level& a, const level& b) {
+            return a.difficulty() < b.difficulty();
+        }
+    );
+}
+
+void level_pack::add_group(level_pack::category& cat, level_pack::category::group_properties group, const std::unordered_set<level>& pre_existing_levels) {
+    std::size_t old_size = cat.levels.size();
+    std::unordered_set<level> new_levels;
+    std::size_t n_levels_to_add = group.n_levels;
+
+    do {
+        level candidate(group.height, group.width, group.colors, group.color_dist);
+
+        if (new_levels.count(candidate) == 0 && pre_existing_levels.count(candidate) == 0) {
+            cat.levels.push_back(candidate);
+            new_levels.insert(candidate);
+            n_levels_to_add--;
+        }
+    } while (n_levels_to_add != 0);
+
+    std::sort(cat.levels.begin() + old_size, cat.levels.end(),
         [] (const level& a, const level& b) {
             return a.difficulty() < b.difficulty();
         }
@@ -99,6 +122,33 @@ void level_pack::add_category(std::string name, std::vector<level_pack::category
 
     for (category::group_properties& g : groups) {
         add_group(*cat, g);
+    }
+}
+
+void level_pack::add_category(std::string name, level_pack::category::group_properties group, const std::unordered_set<level>& pre_existing_levels) {
+    if (find_category(name) != m_data.end()) {
+        std::ostringstream osstr;
+        osstr << "level_pack: there already exists a category with name ";
+        osstr << name;
+        throw std::invalid_argument(osstr.str());
+    }
+
+    std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+    add_group(*cat, group, pre_existing_levels);
+}
+
+void level_pack::add_category(std::string name, std::vector<level_pack::category::group_properties> groups, const std::unordered_set<level>& pre_existing_levels) {
+    if (find_category(name) != m_data.end()) {
+        std::ostringstream osstr;
+        osstr << "level_pack: there already exists a category with name ";
+        osstr << name;
+        throw std::invalid_argument(osstr.str());
+    }
+
+    std::list<category>::iterator cat = m_data.insert(m_data.end(), { name });
+
+    for (category::group_properties& g : groups) {
+        add_group(*cat, g, pre_existing_levels);
     }
 }
 

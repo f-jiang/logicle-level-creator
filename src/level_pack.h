@@ -3,6 +3,7 @@
 
 #include <list>
 #include <vector>
+#include <unordered_set>
 
 #include "../lib/json.hpp"
 #include "level.h"
@@ -60,6 +61,18 @@ public:
     void add_category(std::string, std::vector<category::group_properties>);
 
     /*
+     * Same as level_pack::add_category(std::string, category::group_properties), but also checks newly
+     * generated levels against a set of pre-existing levels.
+     */
+    void add_category(std::string, category::group_properties, const std::unordered_set<level>&);
+
+    /*
+     * Same as level_pack::add_category(std::string, std::vector<category::group_properties>), but also checks newly
+     * generated levels against a set of pre-existing levels.
+     */
+    void add_category(std::string, std::vector<category::group_properties>, const std::unordered_set<level>&);
+
+    /*
      * Removes the category with the given name.
      */
     void remove_category(std::string);
@@ -96,7 +109,9 @@ private:
     std::string m_name;
 
     std::list<category>::iterator find_category(std::string);
+
     void add_group(category&, category::group_properties);
+    void add_group(category&, category::group_properties, const std::unordered_set<level>&);
 
 };
 

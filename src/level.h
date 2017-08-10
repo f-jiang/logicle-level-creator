@@ -5,10 +5,21 @@
 
 #include "../lib/json.hpp"
 #include "json_serializable.h"
+#include "json_deserializable.h"
 #include "gameboard.h"
 
-class level : public json_serializable {
+class level;
+
+namespace std {
+    template <>
+    struct hash<level> {
+        size_t operator()(const level&) const;
+    };
+}
+
+class level : public json_serializable, public json_deserializable {
 friend class level_pack;
+friend std::size_t std::hash<level>::operator()(const level&) const;
 public:
     /*
      * Constructs a level, generating a new gameboard with the specified properties,

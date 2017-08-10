@@ -1,6 +1,8 @@
 #include "level.h"
 
 #include <stdexcept>
+#include <string>
+#include <sstream>
 
 level::level(std::size_t height,
         std::size_t width,
@@ -100,4 +102,15 @@ std::size_t level::n_colors() const {
 
 std::size_t level::n_solutions() const {
     return m_solns.n_solutions();
+}
+
+std::size_t std::hash<level>::operator()(const level& x) const {
+    std::ostringstream osstr;
+
+    osstr << x.m_gameboard;
+    for (unsigned c : x.m_colors) {
+        osstr << std::to_string(c);
+    }
+
+    return std::hash<std::string>()(osstr.str());
 }
