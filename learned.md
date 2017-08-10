@@ -1,4 +1,4 @@
-### Libraries
+### Libraries and tools
 
 #### STL
 
@@ -12,6 +12,13 @@
 - variadic functions through "recursion" and partial template specialization
 
 #### JSON for modern C++
+
+- `at()`, `find()`
+
+#### Makefiles
+
+- wildcards `$(wildcard *.c)`
+
 
 ### Language features
 
@@ -74,3 +81,5 @@ std::list<level_pack::category>::iterator level_pack::find_category(std::string 
     );
 }
 ```
+- for checking exception cases, begin each case with an `if` statement rather than `else`/`else if` so that they don't
+get skipped over
