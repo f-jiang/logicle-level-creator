@@ -34,7 +34,11 @@
   - explicit return type: `[] (params) -> return_type { body }`
   - capture external vars by reference: `[&] (params) { body }`
   - capture external vars by copy: `[=] (params) { body }`
-
+- exceptions:
+  - if no handler, exception within try will terminate the try block plus the function containing the try block
+  - can catch anything using `catch (...)`
+  - can throw exception objects, primitive types, or not throw at all
+  - throwing within a nested handler will activate the containing try block's handler
 ### Algorithms
 
 ### Gotchas
@@ -83,3 +87,5 @@ std::list<level_pack::category>::iterator level_pack::find_category(std::string 
 ```
 - for checking exception cases, begin each case with an `if` statement rather than `else`/`else if` so that they don't
 get skipped over
+- stl iostream was created before exceptions and is therefore not exception-friendly
+- `std::unordered_set`: provide a custom hasher, either thru a function or an override of `std::hash<T>::operator()()`
