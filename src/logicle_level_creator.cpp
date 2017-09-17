@@ -123,6 +123,12 @@ int main(int argc, char* argv[]) {
     PROGRAM_NAME = std::string(argv[0]);
     parse_options(argc, argv);
 
+    if (optind == argc) {
+        display_mesg("to create level packs, please provide at least one JSON parameter file", false);
+        usage();
+        exit(1);
+    }
+
     for ( ; optind < argc; optind++) {
         if (!does_file_exist(argv[optind])) {
             display_mesg("no parameter file found at '" + std::string(argv[optind]) + "'", false);
